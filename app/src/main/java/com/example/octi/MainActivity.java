@@ -1,10 +1,18 @@
 package com.example.octi;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+}
+
+/*
 import it.unibo.tuprolog.core.*;
 import it.unibo.tuprolog.solve.Solution;
 import it.unibo.tuprolog.solve.SolverFactory;
@@ -14,15 +22,8 @@ import it.unibo.tuprolog.solve.Solver;
 import it.unibo.tuprolog.solve.classic.ClassicSolverFactory;
 import kotlin.sequences.Sequence;
 
-public class MainActivity extends AppCompatActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        start();
-    }
+import android.util.Log;
 
-    private void start() {
         Theory t = ClausesParser
                 .withDefaultOperators()
                 .parseTheory("fact(x).");
@@ -46,5 +47,4 @@ public class MainActivity extends AppCompatActivity {
         Solution s = solutions.iterator().next();
 
         Log.d("fuck", Boolean.toString(s.isYes()));
-    }
-}
+ */
