@@ -1,0 +1,65 @@
+package com.example.octi.models;
+
+import it.unibo.tuprolog.core.*;
+import it.unibo.tuprolog.solve.Solution;
+import it.unibo.tuprolog.solve.Solver;
+import it.unibo.tuprolog.solve.SolverFactory;
+import it.unibo.tuprolog.solve.classic.ClassicSolverFactory;
+import it.unibo.tuprolog.theory.Theory;
+import it.unibo.tuprolog.theory.parsing.ClausesParser;
+
+import android.content.res.Resources;
+
+import com.example.octi.R;
+
+import java.io.InputStream;
+import java.util.Objects;
+import java.util.Scanner;
+
+// All game instances share a single static solver.
+public class Game {
+    public enum Team {
+        RED,
+        GREEN
+    }
+    static private Solver solver;
+
+    private GameState gameState;
+
+    public Game(Resources res) {
+        initializeSolver(res);
+
+        Solution s = solver.solveOnce(Struct.of("base_game", Var.of("X")));
+        gameState = new GameState(s.getSubstitution().getByName("X").castToStruct());
+    }
+
+    public static Team teamFromString(String s) {
+        return Objects.equals(s, "red") ? Team.RED : Team.GREEN;
+    }
+    private static void initializeSolver(Resources res) {
+        if (solver == null) {
+            InputStream stream = res.openRawResource(R.raw.octi);
+            Scanner s = new Scanner(stream).useDelimiter("\\A");
+
+            String theorySource = s.next();
+
+            Theory theory = ClausesParser
+                    .withDefaultOperators()
+                    .parseTheory(theorySource);
+
+            SolverFactory factory = ClassicSolverFactory.INSTANCE;
+
+            solver = factory.solverWithDefaultBuiltins(
+                factory.getDefaultUnificator(),
+                factory.getDefaultRuntime(),
+                factory.getDefaultFlags(),
+                theory,
+                factory.getDefaultDynamicKb(),
+                factory.getDefaultInputChannel(),
+                factory.getDefaultErrorChannel(),
+                factory.getDefaultErrorChannel(),
+                factory.getDefaultWarningsChannel()
+            );
+        }
+    }
+}
