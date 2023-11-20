@@ -13,11 +13,16 @@ import android.content.res.Resources;
 import com.example.octi.R;
 
 import java.io.InputStream;
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
 // All game instances share a single static solver.
 public class Game {
+    public static final String BASE_GAME = "base_game";
+    public static final String RED = "red";
+
     public enum Team {
         RED,
         GREEN
@@ -29,13 +34,33 @@ public class Game {
     public Game(Resources res) {
         initializeSolver(res);
 
-        Solution s = solver.solveOnce(Struct.of("base_game", Var.of("X")));
+        Solution s = solver.solveOnce(Struct.of(BASE_GAME, Var.of("X")));
         gameState = new GameState(s.getSubstitution().getByName("X").castToStruct());
     }
 
-    public static Team teamFromString(String s) {
-        return Objects.equals(s, "red") ? Team.RED : Team.GREEN;
+    // Parse functions for game-logic global concepts that
+    // don't deserve a class of their own
+
+    public static Team parseTeam(String s) {
+        return Objects.equals(s, RED) ? Team.RED : Team.GREEN;
     }
+
+    // (X, Y) (only ints)
+    public static Vector2D parseVector2D(Tuple tuple) {
+        int x = tuple.get(0).castToInteger().getValue().toInt();
+        int y = tuple.get(1).castToInteger().getValue().toInt();
+
+        return new Vector2D(x, y);
+    }
+
+    // Compound term with a minus functor -(X, Y)
+    public static Map.Entry<Game.Team, java.lang.Integer> parseTeamArrowCount(Struct struct) {
+        return new AbstractMap.SimpleEntry<>(
+                Game.parseTeam(struct.get(0).toString()),
+                struct.get(1).castToInteger().getValue().toInt()
+        );
+    }
+
     private static void initializeSolver(Resources res) {
         if (solver == null) {
             InputStream stream = res.openRawResource(R.raw.octi);

@@ -1,5 +1,6 @@
 package com.example.octi.models;
 
+import it.unibo.tuprolog.core.*;
 import java.util.ArrayList;
 
 public class Octi {
@@ -7,10 +8,26 @@ public class Octi {
     private final Vector2D position;
     private final ArrayList<Vector2D> arrowList;
 
-    public Octi(Game.Team team, Vector2D position, ArrayList<Vector2D> arrowList) {
-        this.team = team;
-        this.position = position;
-        this.arrowList = arrowList;
+    public Octi(Struct octiData) {
+        arrowList = new ArrayList<>();
+
+        List octiArrowPrologList = octiData.get(2).castToList();
+
+        if (!octiArrowPrologList.isEmptyList()) {
+            Term[] octiArrowArray = octiArrowPrologList.getUnfoldedArray();
+            for (Term octiArrowTerm : octiArrowArray) {
+                Vector2D arrow = Game.parseVector2D(octiArrowTerm.castToTuple());
+
+                arrowList.add(arrow);
+            }
+        }
+
+        Tuple octiPosition = octiData.get(1).castToTuple();
+        int x = octiPosition.get(0).castToInteger().getValue().toInt();
+        int y = octiPosition.get(1).castToInteger().getValue().toInt();
+        position = new Vector2D(x, y);
+
+        team = Game.parseTeam(octiData.get(0).toString());
     }
 
     public Game.Team getTeam() {
