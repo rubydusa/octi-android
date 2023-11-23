@@ -9,6 +9,7 @@ import it.unibo.tuprolog.theory.Theory;
 import it.unibo.tuprolog.theory.parsing.ClausesParser;
 
 import android.content.res.Resources;
+import android.util.Log;
 
 import com.example.octi.R;
 
@@ -34,8 +35,29 @@ public class Game {
     public Game(Resources res) {
         initializeSolver(res);
 
-        Solution s = solver.solveOnce(Struct.of(BASE_GAME, Var.of("X")));
-        gameState = new GameState(s.getSubstitution().getByName("X").castToStruct());
+        Var baseGameVar = Var.of("BaseGame");
+        Var jsonRepresentationVar = Var.of("JsonRepresentation");
+
+        Solution baseGameSolution = solver.solveOnce(
+                Struct.of(BASE_GAME, baseGameVar)
+        );
+
+        Struct jsonRepresentationQuery = Struct.of(
+                "json",
+                baseGameVar.get(baseGameSolution.getSubstitution()),
+                jsonRepresentationVar);
+
+        Solution jsonRepresentationSolution = solver.solveOnce(jsonRepresentationQuery);
+
+        Term json = jsonRepresentationVar.get(jsonRepresentationSolution.getSubstitution());
+
+        String result = TermFormatter
+                .prettyExpressions(solver.getOperators())
+                .format(json);
+
+        Log.d("fuck", result);
+
+        // gameState = new GameState(s.getSubstitution().getByName("X").castToStruct());
     }
 
     // Parse functions for game-logic global concepts that

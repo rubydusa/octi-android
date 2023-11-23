@@ -1,3 +1,5 @@
+:- op(600, xfy, ':').
+
 width(5).
 height(6).
 next_team(red, green).
@@ -205,3 +207,53 @@ win(game(_, _, Board), Team) :-
 win(game(Team1, Arrows, Board), Team0) :-
     next_team(Team0, Team1),
     \+ turn_1(game(Team1, Arrows, Board), _, _).
+
+equal(X, X).
+
+json_map([], []).
+json_map([A | As], [B | Bs]) :-
+    json(A, B),
+    json_map(As, Bs).
+
+json((A, B), [A, B]).
+
+json(
+     move(chain, [(X1, Y1), (X2, Y2) | Cont]),
+     {
+     	type: chain,
+        target: [X1, Y1],
+        action: [X2, Y2],
+        rest: ContJSON
+     }) :-
+    maplist(json, Cont, ContJSON).
+
+json(
+     move(Type, (X1, Y1), (X2, Y2)),
+     {
+     	type: Type,
+        target: [X1, Y1],
+        action: [X2, Y2],
+        rest: []
+     }).
+
+json(Team - ArrowCount, { team: Team, arrows: ArrowCount }).
+
+json(
+     octi(Team, (X, Y), Arrows),
+     {
+     	team: Team,
+        position: (X, Y),
+        arrows: ArrowsJSON
+     }
+    ) :-
+    json_map(Arrows, ArrowsJSON).
+
+json(
+     game(Team, ArrowCounts, Octis),
+     {
+     	team: Team,
+        arrow_counts: ArrowCountsJSON,
+        octis: OctisJSON
+     }) :-
+    json_map(ArrowCounts, ArrowCountsJSON),
+    json_map(Octis, OctisJSON).
