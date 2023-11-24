@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Move {
+    /*
     public static final String PLACE = "place";
     // these are differentiated in prolog for practical reasons but
     // they are all MOVE
@@ -77,4 +78,6 @@ public class Move {
     public ArrayList<Vector2D> getRest() {
         return rest;
     }
+
+     */
 }

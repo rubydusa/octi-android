@@ -4,10 +4,12 @@ public class Vector2D {
     private Integer x;
     private Integer y;
 
+    /*
     public Vector2D(Integer x, Integer y) {
         setX(x);
         setY(y);
     }
+    */
 
     public Integer getX() {
         return x;

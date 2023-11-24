@@ -2,7 +2,14 @@ package com.example.octi.models;
 
 import it.unibo.tuprolog.core.*;
 import java.util.ArrayList;
+import java.util.List;
 
+public class Octi {
+    private Game.Team team;
+    private Vector2D position;
+    private List<Vector2D> arrows;
+}
+/*
 public class Octi {
     private final Game.Team team;
     private final Vector2D position;
@@ -42,3 +49,4 @@ public class Octi {
         return arrowList;
     }
 }
+*/

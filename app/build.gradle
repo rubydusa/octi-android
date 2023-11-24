@@ -42,4 +42,5 @@ dependencies {
     implementation 'it.unibo.tuprolog:parser-theory:0.31.18'
     implementation 'it.unibo.tuprolog:solve:0.31.18'
     implementation 'it.unibo.tuprolog:solve-classic:0.31.18'
+    implementation 'com.google.code.gson:gson:2.10.1'
 }

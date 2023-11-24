@@ -12,6 +12,11 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import com.example.octi.R;
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.AbstractMap;
@@ -25,7 +30,9 @@ public class Game {
     public static final String RED = "red";
 
     public enum Team {
+        @SerializedName("red")
         RED,
+        @SerializedName("green")
         GREEN
     }
     static private Solver solver;
@@ -49,15 +56,30 @@ public class Game {
 
         Solution jsonRepresentationSolution = solver.solveOnce(jsonRepresentationQuery);
 
+        Struct originalGameState = baseGameVar.get(baseGameSolution.getSubstitution()).castToStruct();
         Term json = jsonRepresentationVar.get(jsonRepresentationSolution.getSubstitution());
 
-        String result = TermFormatter
+        String jsonString = TermFormatter
                 .prettyExpressions(solver.getOperators())
-                .format(json);
+                .format(json)
+                .replaceAll("([a-zA-Z_][a-zA-Z0-9_]*)", "\"$1\"");
 
-        Log.d("fuck", result);
+        Gson gson = new Gson();
 
-        // gameState = new GameState(s.getSubstitution().getByName("X").castToStruct());
+        gameState = gson.fromJson(jsonString, GameState.class);
+
+        Log.d("fuck", gameState.getTeam().toString());
+
+        /*
+        JSONObject json;
+        try {
+            json = new JSONObject(jsonString);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        */
+
+
     }
 
     // Parse functions for game-logic global concepts that
@@ -68,12 +90,14 @@ public class Game {
     }
 
     // (X, Y) (only ints)
+    /*
     public static Vector2D parseVector2D(Tuple tuple) {
         int x = tuple.get(0).castToInteger().getValue().toInt();
         int y = tuple.get(1).castToInteger().getValue().toInt();
 
         return new Vector2D(x, y);
     }
+    */
 
     // Compound term with a minus functor -(X, Y)
     public static Map.Entry<Game.Team, java.lang.Integer> parseTeamArrowCount(Struct struct) {

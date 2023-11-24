@@ -1,12 +1,36 @@
 package com.example.octi.models;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import it.unibo.tuprolog.core.*;
 
 import java.lang.Integer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+public class GameState {
+    private Game.Team team;
+    private List<ArrowCount> arrows;
+    private List<Octi> octis;
+
+    public Game.Team getTeam() {
+        return team;
+    }
+
+    public List<ArrowCount> getArrows() {
+        return arrows;
+    }
+
+    public List<Octi> getOctis() {
+        return octis;
+    }
+}
+
+/*
 public class GameState {
     private final Struct originalGameState;
     private final Game.Team turn;
@@ -62,3 +86,4 @@ public class GameState {
         return octis;
     }
 }
+*/

@@ -193,9 +193,13 @@ turn_1(
             move(chain, [(X1, Y1), (X2, Y2) | Cont])
          ).
 
+octis_team([octi(Team, _, _)], Team).
+octis_team([octi(Team, _, _) | Xs], Team) :-
+    octis_team(Xs, Team).
+
 % team0 wins if all octis are of team0
 win(game(_, _, Board), Team0) :-
-    maplist(=(octi(Team0, _, _)), Board).
+    octis_team(Board, Team0).
 
 % team wins if one of the octis are in winpos
 win(game(_, _, Board), Team) :-
@@ -207,53 +211,55 @@ win(game(_, _, Board), Team) :-
 win(game(Team1, Arrows, Board), Team0) :-
     next_team(Team0, Team1),
     \+ turn_1(game(Team1, Arrows, Board), _, _).
-
-equal(X, X).
-
 json_map([], []).
 json_map([A | As], [B | Bs]) :-
     json(A, B),
     json_map(As, Bs).
 
-json((A, B), [A, B]).
+json((A, B), { x: A, y: B }).
 
 json(
      move(chain, [(X1, Y1), (X2, Y2) | Cont]),
      {
      	type: chain,
-        target: [X1, Y1],
-        action: [X2, Y2],
+        target: Target,
+        action: Action,
         rest: ContJSON
      }) :-
-    maplist(json, Cont, ContJSON).
+    json((X1, Y1), Target),
+    json((X2, Y2), Action),
+    json_map(Cont, ContJSON).
 
 json(
      move(Type, (X1, Y1), (X2, Y2)),
      {
      	type: Type,
-        target: [X1, Y1],
-        action: [X2, Y2],
+        target: Target,
+        action: Action,
         rest: []
-     }).
+     }) :-
+    json((X1, Y1), Target),
+    json((X2, Y2), Action).
 
-json(Team - ArrowCount, { team: Team, arrows: ArrowCount }).
+json(Team - Arrows, { team: Team, arrows: Arrows }).
 
 json(
      octi(Team, (X, Y), Arrows),
      {
      	team: Team,
-        position: (X, Y),
+        position: Position,
         arrows: ArrowsJSON
      }
     ) :-
+    json((X, Y), Position),
     json_map(Arrows, ArrowsJSON).
 
 json(
-     game(Team, ArrowCounts, Octis),
+     game(Team, Arrows, Octis),
      {
      	team: Team,
-        arrow_counts: ArrowCountsJSON,
+        arrows: ArrowsJSON,
         octis: OctisJSON
      }) :-
-    json_map(ArrowCounts, ArrowCountsJSON),
+    json_map(Arrows, ArrowsJSON),
     json_map(Octis, OctisJSON).
