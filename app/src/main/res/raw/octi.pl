@@ -1,7 +1,12 @@
+% suited for tuProlog
+
 :- op(600, xfy, ':').
 
 width(5).
 height(6).
+team(red).
+team(green).
+non_team(dummy).
 next_team(red, green).
 next_team(green, red).
 winpos(red, [(1, 1), (2, 1), (3, 1), (4, 1)]).
@@ -10,7 +15,7 @@ winpos(green, [(1, 5), (2, 5), (3, 5), (4, 5)]).
 select_1(X, [X | E], E).
 select_1(X, [A | E0], [A | E1]) :-
     X \= A,
-    select_1(E0, E1).
+    select_1(X, E0, E1).
 
 base_game(game(
               red,
@@ -20,7 +25,7 @@ base_game(game(
               ],
               [
   octi(green, (1, 1), []), octi(green, (2, 1), []), octi(green, (3, 1), []), octi(green, (4, 1), []),
-  octi(red, (1, 5), []), octi(red, (1, 4), []), octi(red, (3, 5), []), octi(red, (4, 5), [])
+  octi(red, (1, 5), []), octi(red, (2, 5), []), octi(red, (3, 5), []), octi(red, (4, 5), [])
               ]
               )).
 
@@ -53,6 +58,7 @@ valid_vector((1, 0)).
 valid_vector((1, 1)).
 valid_vector((0, 1)).
 valid_vector((-1, 1)).
+valid_vector((-1, 0)).
 valid_vector((-1, -1)).
 valid_vector((0, -1)).
 valid_vector((1, -1)).
@@ -118,8 +124,9 @@ turn_1(
     add_vectors(NeededVector, (X0, Y0), BlockingPos),
     add_vectors(BlockingPos, NeededVector, (X1, Y1)),
 
+    member(JumpableTeam, [Team0, dummy]),
     % check that own team blocking and no octigon after jump
-    member(octi(Team0, BlockingPos, _), Board0),
+    member(octi(JumpableTeam, BlockingPos, _), Board0),
     non_member(octi(_, (X1, Y1), _), Board0),
 
     Board1 = [octi(Team0, (X1, Y1), Vectors) | State0].
@@ -141,23 +148,20 @@ turn_1(
     add_vectors(NeededVector, (X0, Y0), BlockingPos),
     add_vectors(BlockingPos, NeededVector, (X1, Y1)),
 
-    % get arrow count of octi at blocking pos
-    member(octi(Team1, BlockingPos, OtherArrows), Board0),
+    % remove and get arrow count of octi at blocking pos
+    select_1(octi(Team1, BlockingPos, OtherArrows), State0, State1),
 
     % update arrow count
     length(OtherArrows, AddedArrows),
-    map_get(Arrows0, Team0 -
-Team0Arrows),
+    map_get(Arrows0, Team0 - Team0Arrows),
     NextTeam0Arrows is Team0Arrows + AddedArrows,
     map_set(Arrows0, Arrows1, Team0 - NextTeam0Arrows),
 
     % check that no octigon after jump
-    non_member(octi(_, (X1, Y1), _), Board0),
+    non_member(octi(_, (X1, Y1), _), State1),
 
-    State1 = [octi(Team0, (X1, Y1), Vectors) | State0],
-
-    % remove eaten octi
-    select_1(octi(_, BlockingPos, _), State1, Board1).
+    % add dummy octigon
+    Board1 = [octi(Team0, (X1, Y1), Vectors), octi(dummy, _, _) | State1].
 
 % chain move 2
 turn_1(
@@ -193,6 +197,54 @@ turn_1(
             move(chain, [(X1, Y1), (X2, Y2) | Cont])
          ).
 
+clean_octis([], []).
+clean_octis([octi(Team, X, Y) | Rest0], [octi(Team, X, Y) | Rest]) :-
+    team(Team),
+    clean_octis(Rest0, Rest).
+clean_octis([octi(Team, _, _) | Rest0], Rest) :-
+    non_team(Team),
+    clean_octis(Rest0, Rest).
+
+clean(
+         game(Team, Arrows, Board0),
+         game(Team, Arrows, Board1)
+     ) :-
+    clean_octis(Board0, Board1).
+
+% remove dummy octis
+turn(Game0, Game, Move) :-
+    turn_1(Game0, Game1, Move),
+    clean(Game1, Game).
+
+% for debugging purposes
+play(Game, Game, []).
+
+play(Game0, Game, [Move | Rest]) :-
+    turn(Game0, Game1, Move),
+    play(Game1, Game, Rest).
+
+turn_step(Game0, Game1, move(Type, Target, Action), conclusive) :-
+    turn(Game0, Game1, move(Type, Target, Action)).
+
+turn_step(
+           game(Team0, Arrows0, Board0),
+           game(Team0, Arrows1, Board1),
+           move(jump, Pos1, Pos2),
+           inconclusive
+        ) :-
+    % jump is possible
+    turn_1(
+        game(Team0, Arrows0, Board0),
+        game(Team1, Arrows1, Board1),
+        move(jump, Pos1, Pos2)
+    ),
+    % jump is part of length-2 chain
+    turn_1(
+        game(Team0, Arrows0, Board0),
+        game(Team1, _, _),
+        move(chain, [Pos1, Pos2, _])
+    ).
+
 octis_team([octi(Team, _, _)], Team).
 octis_team([octi(Team, _, _) | Xs], Team) :-
     octis_team(Xs, Team).
@@ -211,6 +263,7 @@ win(game(_, _, Board), Team) :-
 win(game(Team1, Arrows, Board), Team0) :-
     next_team(Team0, Team1),
     \+ turn_1(game(Team1, Arrows, Board), _, _).
+
 json_map([], []).
 json_map([A | As], [B | Bs]) :-
     json(A, B),
