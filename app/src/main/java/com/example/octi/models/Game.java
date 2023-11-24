@@ -1,6 +1,18 @@
 package com.example.octi.models;
 
-import it.unibo.tuprolog.core.*;
+import android.content.res.Resources;
+
+import com.example.octi.R;
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.InputStream;
+import java.util.Scanner;
+
+import it.unibo.tuprolog.core.Struct;
+import it.unibo.tuprolog.core.Term;
+import it.unibo.tuprolog.core.TermFormatter;
+import it.unibo.tuprolog.core.Var;
 import it.unibo.tuprolog.solve.Solution;
 import it.unibo.tuprolog.solve.Solver;
 import it.unibo.tuprolog.solve.SolverFactory;
@@ -8,26 +20,11 @@ import it.unibo.tuprolog.solve.classic.ClassicSolverFactory;
 import it.unibo.tuprolog.theory.Theory;
 import it.unibo.tuprolog.theory.parsing.ClausesParser;
 
-import android.content.res.Resources;
-import android.util.Log;
-
-import com.example.octi.R;
-import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.InputStream;
-import java.util.AbstractMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
-
 // All game instances share a single static solver.
 public class Game {
+    // names of prolog predicates;
     public static final String BASE_GAME = "base_game";
-    public static final String RED = "red";
+    public static final String JSON = "json";
 
     public enum Team {
         @SerializedName("red")
@@ -35,76 +32,42 @@ public class Game {
         @SerializedName("green")
         GREEN
     }
+
+    static private Gson gson;
     static private Solver solver;
 
-    private GameState gameState;
+    private final GameState gameState;
 
     public Game(Resources res) {
+        gson = new Gson();
         initializeSolver(res);
 
+        // variable names are only descriptive and can be changed
         Var baseGameVar = Var.of("BaseGame");
         Var jsonRepresentationVar = Var.of("JsonRepresentation");
 
+        // get prolog-representation of initial game state
         Solution baseGameSolution = solver.solveOnce(
                 Struct.of(BASE_GAME, baseGameVar)
         );
+        Struct prologData = baseGameVar.get(baseGameSolution.getSubstitution()).castToStruct();
 
+        // transform into json-representation of data through prolog
         Struct jsonRepresentationQuery = Struct.of(
-                "json",
+                JSON,
                 baseGameVar.get(baseGameSolution.getSubstitution()),
                 jsonRepresentationVar);
-
         Solution jsonRepresentationSolution = solver.solveOnce(jsonRepresentationQuery);
-
-        Struct originalGameState = baseGameVar.get(baseGameSolution.getSubstitution()).castToStruct();
         Term json = jsonRepresentationVar.get(jsonRepresentationSolution.getSubstitution());
 
+        // no built-in option for enclosing atoms with quotes, so regex
         String jsonString = TermFormatter
                 .prettyExpressions(solver.getOperators())
                 .format(json)
                 .replaceAll("([a-zA-Z_][a-zA-Z0-9_]*)", "\"$1\"");
 
-        Gson gson = new Gson();
-
-        gameState = gson.fromJson(jsonString, GameState.class);
-
-        Log.d("fuck", gameState.getTeam().toString());
-
-        /*
-        JSONObject json;
-        try {
-            json = new JSONObject(jsonString);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        */
-
-
-    }
-
-    // Parse functions for game-logic global concepts that
-    // don't deserve a class of their own
-
-    public static Team parseTeam(String s) {
-        return Objects.equals(s, RED) ? Team.RED : Team.GREEN;
-    }
-
-    // (X, Y) (only ints)
-    /*
-    public static Vector2D parseVector2D(Tuple tuple) {
-        int x = tuple.get(0).castToInteger().getValue().toInt();
-        int y = tuple.get(1).castToInteger().getValue().toInt();
-
-        return new Vector2D(x, y);
-    }
-    */
-
-    // Compound term with a minus functor -(X, Y)
-    public static Map.Entry<Game.Team, java.lang.Integer> parseTeamArrowCount(Struct struct) {
-        return new AbstractMap.SimpleEntry<>(
-                Game.parseTeam(struct.get(0).toString()),
-                struct.get(1).castToInteger().getValue().toInt()
-        );
+        GameState.Data gameStateData = gson.fromJson(jsonString, GameState.Data.class);
+        gameState = new GameState(gameStateData, prologData);
     }
 
     private static void initializeSolver(Resources res) {

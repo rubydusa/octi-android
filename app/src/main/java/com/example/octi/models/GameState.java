@@ -1,89 +1,42 @@
 package com.example.octi.models;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import it.unibo.tuprolog.core.*;
-
-import java.lang.Integer;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+// It's important to keep track of the original prolog representation
+// of data for future queries.
 public class GameState {
-    private Game.Team team;
-    private List<ArrowCount> arrows;
-    private List<Octi> octis;
+    private final Data data;
+    private final Struct prologData;
 
-    public Game.Team getTeam() {
-        return team;
+    public GameState(Data data, Struct prologData) {
+        this.data = data;
+        this.prologData = prologData;
     }
 
-    public List<ArrowCount> getArrows() {
-        return arrows;
+    public Data getData() {
+        return data;
     }
 
-    public List<Octi> getOctis() {
-        return octis;
+    public Struct getPrologData() {
+        return prologData;
     }
-}
 
-/*
-public class GameState {
-    private final Struct originalGameState;
-    private final Game.Team turn;
-    private final Map<Game.Team, java.lang.Integer> arrows;
-    private final ArrayList<Octi> octis;
+    public class Data {
+        private Game.Team team;
+        private List<ArrowCount> arrows;
+        private List<Octi> octis;
 
-    public GameState(Struct gameState) {
-        originalGameState = gameState.freshCopy();
-        turn = Game.parseTeam(gameState.getArgAt(0).castToAtom().toString());
+        public Game.Team getTeam() {
+            return team;
+        }
 
-        // [
-        // -(TEAM1, COUNT1),
-        // -(TEAM2, COUNT2)
-        // ]
-        Term[] arrowArray = gameState.getArgAt(1).castToList().getUnfoldedArray();
-        Struct firstTeam = arrowArray[0].castToStruct();
-        Struct secondTeam = arrowArray[1].castToStruct();
+        public List<ArrowCount> getArrows() {
+            return arrows;
+        }
 
-        arrows = new HashMap<>();
-
-        Map.Entry<Game.Team, java.lang.Integer> firstTeamEntry = Game.parseTeamArrowCount(firstTeam);
-        Map.Entry<Game.Team, java.lang.Integer> secondTeamEntry = Game.parseTeamArrowCount(secondTeam);
-
-        arrows.put(firstTeamEntry.getKey(), firstTeamEntry.getValue());
-        arrows.put(secondTeamEntry.getKey(), secondTeamEntry.getValue());
-
-        octis = new ArrayList<>();
-        Term[] octiArray = gameState.get(2).castToList().getUnfoldedArray();
-
-        for (Term octiTerm : octiArray) {
-            // 2PKT is dumb and includes empty list as the last element
-            if (octiTerm.isEmptyList()) {
-                continue;
-            }
-
-            octis.add(new Octi(octiTerm.castToStruct()));
+        public List<Octi> getOctis() {
+            return octis;
         }
     }
-
-    public Struct getOriginalGameState() {
-        return originalGameState;
-    }
-
-    public Game.Team getTurn() {
-        return turn;
-    }
-
-    public Map<Game.Team, Integer> getArrows() {
-        return arrows;
-    }
-
-    public ArrayList<Octi> getOctis() {
-        return octis;
-    }
 }
-*/
