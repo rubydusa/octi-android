@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="cell_border">#231709</color>
+    <color name="cell_background">#FFDB9F</color>
+    <color name="team_red">#E71D36</color>
+    <color name="team_green">#2C6E49</color>
+    <color name="light_team_red">#F17E8B</color>
+    <color name="light_team_green">#7CCB9E</color>
 </resources>
