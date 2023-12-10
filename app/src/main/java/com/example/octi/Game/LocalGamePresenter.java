@@ -1,5 +1,16 @@
 package com.example.octi.Game;
 
-public class LocalGamePresenter {
+import android.util.Log;
 
+import com.example.octi.models.Game;
+
+public class LocalGamePresenter {
+    LocalGameActivity view;
+    Game game;
+
+    public LocalGamePresenter(LocalGameActivity view) {
+        this.view = view;
+        game = new Game(view.getResources());
+        view.colorCells(game.getCellColors());
+    }
 }

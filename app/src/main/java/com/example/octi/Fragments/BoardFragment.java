@@ -1,7 +1,6 @@
 package com.example.octi.Fragments;
 
 import android.content.Context;
-import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -15,13 +14,15 @@ import android.widget.GridLayout;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.octi.R;
 import com.example.octi.models.Game;
+import com.example.octi.models.Octi;
+import com.example.octi.models.Vector2D;
 
-import java.util.Optional;
+import java.util.List;
+
+import kotlin.Pair;
 
 public class BoardFragment extends Fragment {
 
@@ -56,6 +57,14 @@ public class BoardFragment extends Fragment {
         return view;
     }
 
+    public void colorCells(List<Pair<Vector2D, Game.Team>> colors) {
+        for (Pair<Vector2D, Game.Team> cellColor : colors) {
+            Vector2D coordinates = cellColor.getFirst();
+            Game.Team color = cellColor.getSecond();
+            cells[coordinates.getY()][coordinates.getX()].setCellColor(color);
+        }
+    }
+
     /*
     private void addPieceToCell(int row, int col) {
         FrameLayout cell = cellViews[row][col];
@@ -71,7 +80,7 @@ public class BoardFragment extends Fragment {
     */
 
     private void onCellClicked(Cell cell) {
-
+        cell.addOcti();
     }
 
     private class Cell {
@@ -79,10 +88,12 @@ public class BoardFragment extends Fragment {
 
         private final FrameLayout frame;
 
+        private final Context context;
+
         private final int x;
         private final int y;
         @Nullable
-        private PieceFragment piece;
+        private PieceView piece;
 
         public Cell(
                 GridLayout gridLayout,
@@ -93,7 +104,7 @@ public class BoardFragment extends Fragment {
             this.x = x;
             this.y = y;
 
-            Context context = getContext();
+            context = getContext();
 
             // create frame layout
             frame = new FrameLayout(context);
@@ -104,19 +115,7 @@ public class BoardFragment extends Fragment {
             // set background
             frame.setBackgroundResource(R.drawable.cell_background);
 
-            LayerDrawable backgroundLayer = (LayerDrawable) frame.getBackground();
-            Drawable backgroundDrawable = backgroundLayer.getDrawable(1);
-            backgroundDrawable.mutate();
-
-            // set color of cell
-            int colorResourceId = getCellColorResource(color);
-            int colorResource = getResources().getColor(colorResourceId, context.getTheme());
-
-            if (backgroundDrawable instanceof ShapeDrawable) {
-                ((ShapeDrawable) backgroundDrawable).getPaint().setColor(colorResource);
-            } else if (backgroundDrawable instanceof GradientDrawable) {
-                ((GradientDrawable) backgroundDrawable).setColor(colorResource);
-            }
+            setCellColor(color);
 
             // add cell to grid layout
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
@@ -125,6 +124,26 @@ public class BoardFragment extends Fragment {
             params.columnSpec = GridLayout.spec(y, 1f);
             params.rowSpec = GridLayout.spec(x, 1f);
             gridLayout.addView(frame, params);
+        }
+
+        public void setCellColor(@Nullable Game.Team color) {
+            LayerDrawable backgroundLayer = (LayerDrawable) frame.getBackground();
+            Drawable backgroundDrawable = backgroundLayer.getDrawable(1);
+            backgroundDrawable.mutate();
+
+            int colorResourceId = getCellColorResource(color);
+            int colorResource = getResources().getColor(colorResourceId, context.getTheme());
+
+            if (backgroundDrawable instanceof ShapeDrawable) {
+                ((ShapeDrawable) backgroundDrawable).getPaint().setColor(colorResource);
+            } else if (backgroundDrawable instanceof GradientDrawable) {
+                ((GradientDrawable) backgroundDrawable).setColor(colorResource);
+            }
+        }
+
+        public void addOcti() {
+            piece = new PieceView(context);
+            frame.addView(piece);
         }
 
         private int getCellColorResource(@Nullable Game.Team color) {

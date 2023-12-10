@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import it.unibo.tuprolog.core.Struct;
@@ -19,13 +20,10 @@ import it.unibo.tuprolog.solve.SolverFactory;
 import it.unibo.tuprolog.solve.classic.ClassicSolverFactory;
 import it.unibo.tuprolog.theory.Theory;
 import it.unibo.tuprolog.theory.parsing.ClausesParser;
+import kotlin.Pair;
 
 // All game instances share a single static solver.
 public class Game {
-    // names of prolog predicates;
-    public static final String BASE_GAME = "base_game";
-    public static final String JSON = "json";
-
     public enum Team {
         @SerializedName("red")
         RED,
@@ -33,14 +31,26 @@ public class Game {
         GREEN
     }
 
+    // names of prolog predicates;
+    public static final String BASE_GAME = "base_game";
+    public static final String JSON = "json";
+
+    // singletones
     static private Gson gson;
     static private Solver solver;
 
-    private final GameState gameState;
+    // fields
+    private GameState gameState;
+
+    // should ideally be retrieved from prolog, but because no custom game modes
+    // initiating from code now
+    private final ArrayList<Pair<Vector2D, Game.Team>> cellColors;
 
     public Game(Resources res) {
-        gson = new Gson();
+        initializeGson();
         initializeSolver(res);
+
+        cellColors = defaultCellColors();
 
         // variable names are only descriptive and can be changed
         Var baseGameVar = Var.of("BaseGame");
@@ -70,6 +80,10 @@ public class Game {
         gameState = new GameState(gameStateData, prologData);
     }
 
+    public ArrayList<Pair<Vector2D, Team>> getCellColors() {
+        return cellColors;
+    }
+
     private static void initializeSolver(Resources res) {
         if (solver == null) {
             InputStream stream = res.openRawResource(R.raw.octi);
@@ -94,6 +108,26 @@ public class Game {
                 factory.getDefaultErrorChannel(),
                 factory.getDefaultWarningsChannel()
             );
+        }
+    }
+
+    private static ArrayList<Pair<Vector2D, Game.Team>> defaultCellColors() {
+        ArrayList<Pair<Vector2D, Game.Team>> array = new ArrayList<>();
+        array.add(new Pair<>(new Vector2D(1, 5), Team.RED));
+        array.add(new Pair<>(new Vector2D(2, 5), Team.RED));
+        array.add(new Pair<>(new Vector2D(3, 5), Team.RED));
+        array.add(new Pair<>(new Vector2D(4, 5), Team.RED));
+        array.add(new Pair<>(new Vector2D(1, 1), Team.GREEN));
+        array.add(new Pair<>(new Vector2D(2, 1), Team.GREEN));
+        array.add(new Pair<>(new Vector2D(3, 1), Team.GREEN));
+        array.add(new Pair<>(new Vector2D(4, 1), Team.GREEN));
+
+        return array;
+    }
+
+    private static void initializeGson() {
+        if (gson == null) {
+            gson = new Gson();
         }
     }
 }

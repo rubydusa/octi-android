@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/dialog_background">
+
+    <Button
+        android:id="@+id/btn_local_game"
+        style="@style/DialogButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Local Game"/>
+
+    <Button
+        android:id="@+id/btn_create_room"
+        style="@style/DialogButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Room"/>
+
+    <Button
+        android:id="@+id/btn_join_room_option"
+        style="@style/DialogButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Join Room"/>
+
+    <LinearLayout
+        android:id="@+id/layout_join_room"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_room_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Room Code:"
+            />
+
+        <EditText
+            android:id="@+id/et_room_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Room Code"/>
+
+        <Button
+            android:id="@+id/btn_join_room"
+            style="@style/DialogButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Join"/>
+    </LinearLayout>
+
+</LinearLayout>
