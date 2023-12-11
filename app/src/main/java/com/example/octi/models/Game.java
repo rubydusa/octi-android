@@ -84,6 +84,8 @@ public class Game {
         return cellColors;
     }
 
+    public GameState getGameState() { return gameState; }
+
     private static void initializeSolver(Resources res) {
         if (solver == null) {
             InputStream stream = res.openRawResource(R.raw.octi);

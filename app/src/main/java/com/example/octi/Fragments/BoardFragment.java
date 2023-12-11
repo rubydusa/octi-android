@@ -57,7 +57,12 @@ public class BoardFragment extends Fragment {
         return view;
     }
 
-    public void colorCells(List<Pair<Vector2D, Game.Team>> colors) {
+    public void drawBoard(Game game) {
+        colorCells(game.getCellColors());
+        drawPieces(game.getGameState().getData().getOctis());
+    }
+
+    private void colorCells(List<Pair<Vector2D, Game.Team>> colors) {
         for (Pair<Vector2D, Game.Team> cellColor : colors) {
             Vector2D coordinates = cellColor.getFirst();
             Game.Team color = cellColor.getSecond();
@@ -65,22 +70,17 @@ public class BoardFragment extends Fragment {
         }
     }
 
-    /*
-    private void addPieceToCell(int row, int col) {
-        FrameLayout cell = cellViews[row][col];
-        if (cell != null) {
-            PieceFragment pieceFragment = new PieceFragment();
-
-            FragmentManager fragmentManager = getChildFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(cell.getId(), pieceFragment);
-            fragmentTransaction.commit();
+    private void drawPieces(List<Octi> pieces) {
+        for (Octi piece : pieces) {
+            Vector2D pos = piece.getPosition();
+            int x = pos.getX();
+            int y = pos.getY();
+            cells[y][x].setPiece(piece);
         }
     }
-    */
 
     private void onCellClicked(Cell cell) {
-        cell.addOcti();
+
     }
 
     private class Cell {
@@ -141,8 +141,9 @@ public class BoardFragment extends Fragment {
             }
         }
 
-        public void addOcti() {
+        public void setPiece(Octi octi) {
             piece = new PieceView(context);
+            piece.setOcti(octi);
             frame.addView(piece);
         }
 

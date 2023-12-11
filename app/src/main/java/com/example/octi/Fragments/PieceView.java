@@ -4,24 +4,35 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.VectorDrawable;
-import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
 import com.example.octi.R;
 import com.example.octi.models.Game;
 import com.example.octi.models.Octi;
+import com.example.octi.models.Vector2D;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PieceView extends View {
+
+    private static final Map<Vector2D, Integer> vec2ArrowDrawable;
+
+    static {
+        vec2ArrowDrawable = new HashMap<>();
+        vec2ArrowDrawable.put(new Vector2D(1, -1), R.drawable.octigon_arrow_top_right);
+        vec2ArrowDrawable.put(new Vector2D(0, -1), R.drawable.octigon_arrow_top_center);
+        vec2ArrowDrawable.put(new Vector2D(-1, -1), R.drawable.octigon_arrow_top_left);
+        vec2ArrowDrawable.put(new Vector2D(-1, 0), R.drawable.octigon_arrow_middle_left);
+        vec2ArrowDrawable.put(new Vector2D(-1, 1), R.drawable.octigon_arrow_bottom_left);
+        vec2ArrowDrawable.put(new Vector2D(0, 1), R.drawable.octigon_arrow_bottom_center);
+        vec2ArrowDrawable.put(new Vector2D(1, 1), R.drawable.octigon_arrow_bottom_right);
+        vec2ArrowDrawable.put(new Vector2D(1, 0), R.drawable.octigon_arrow_middle_right);
+    }
 
     private Drawable octagonDrawable;
     private Drawable octagonArrowDrawable;
@@ -29,13 +40,11 @@ public class PieceView extends View {
     private Drawable octagonArrowFlippedDrawable;
     private Octi octi;
 
-    private Paint paint;
-
     public PieceView(Context context) {
         super(context);
         octagonDrawable = ContextCompat.getDrawable(context, R.drawable.octigon);
-        octagonArrowDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_arrow);
-        octagonArrowFlippedDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_arrow_flipped);
+        octagonArrowDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_team_arrow);
+        octagonArrowFlippedDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_team_arrow_flipped);
     }
 
 
@@ -43,13 +52,11 @@ public class PieceView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawOctagon(canvas);
-        drawArrow(canvas);
-        drawDarts(canvas);
+        drawArrows(canvas);
     }
 
     private void drawOctagon(Canvas canvas) {
-        // Game.Team team = octi.getTeam();
-        Game.Team team = Game.Team.RED;
+        Game.Team team = octi.getTeam();
         Drawable arrowDrawable = octagonArrowDrawable;
 
         if (team == Game.Team.RED) {
@@ -66,12 +73,14 @@ public class PieceView extends View {
         arrowDrawable.draw(canvas);
     }
 
-    private void drawArrow(Canvas canvas) {
-        // Draw the arrow based on teamColor
-    }
+    private void drawArrows(Canvas canvas) {
+        List<Vector2D> arrows = octi.getArrows();
 
-    private void drawDarts(Canvas canvas) {
-        // Draw darts based on the darts array
+        for (Vector2D arrow: arrows) {
+            Drawable arrowDrawable = ContextCompat.getDrawable(getContext(), vec2ArrowDrawable.get(arrow));
+            arrowDrawable.setBounds(canvas.getClipBounds());
+            arrowDrawable.draw(canvas);
+        }
     }
 
     public void setOcti(Octi octi) {

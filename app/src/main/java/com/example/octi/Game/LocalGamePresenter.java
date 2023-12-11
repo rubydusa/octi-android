@@ -11,6 +11,6 @@ public class LocalGamePresenter {
     public LocalGamePresenter(LocalGameActivity view) {
         this.view = view;
         game = new Game(view.getResources());
-        view.colorCells(game.getCellColors());
+        view.drawBoard(game);
     }
 }

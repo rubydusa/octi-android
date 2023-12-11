@@ -31,7 +31,7 @@ public class LocalGameActivity extends AppCompatActivity {
         presenter = new LocalGamePresenter(this);
     }
 
-    public void colorCells(List<Pair<Vector2D, Game.Team>> colors) {
-        board.colorCells(colors);
+    public void drawBoard(Game game) {
+        board.drawBoard(game);
     }
 }

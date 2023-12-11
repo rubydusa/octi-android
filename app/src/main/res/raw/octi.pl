@@ -24,7 +24,7 @@ base_game(game(
                 green - 12
               ],
               [
-  octi(green, (1, 1), []), octi(green, (2, 1), []), octi(green, (3, 1), []), octi(green, (4, 1), []),
+  octi(green, (1, 1), [(1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0)]), octi(green, (2, 1), []), octi(green, (3, 1), []), octi(green, (4, 1), []),
   octi(red, (1, 5), []), octi(red, (2, 5), []), octi(red, (3, 5), []), octi(red, (4, 5), [])
               ]
               )).
