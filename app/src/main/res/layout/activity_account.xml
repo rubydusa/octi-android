@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Room.CreateRoomActivity">
+    tools:context=".Profile.AccountActivity">
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="ROOM"
+        android:text="ACCOUNT"
         android:textColor="@color/wood_black"
         android:textStyle="bold"
         android:textSize="@dimen/text_title"
@@ -19,23 +19,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_room_code_create_room_activity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Room Code: AS7sdV"
-        android:textSize="28sp"
+    <ImageView
+        android:id="@+id/iv_account_pfp_account_activity"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:src="@android:drawable/sym_def_app_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
-    <Button
-        android:id="@+id/btn_share_code_create_room_activity"
+    <TextView
+        android:id="@+id/tv_username_account_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Share"
-        style="@style/WoodThemeButton"
+        android:layout_marginTop="8dp"
+        android:text="USERNAME"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_room_code_create_room_activity" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_account_pfp_account_activity" />
+
+    <TextView
+        android:id="@+id/tv_stats_account_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:text="ELO: 1200 \nWINS: 4 \nLOSSES: 3"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_username_account_activity" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

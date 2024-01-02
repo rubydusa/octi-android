@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.octi.Game.LocalGameActivity;
+import com.example.octi.Profile.AccountActivity;
 import com.example.octi.R;
 import com.example.octi.Room.CreateRoomActivity;
 
@@ -25,6 +26,8 @@ public class HomeActivity extends AppCompatActivity implements GameOptionsDialog
     }
 
     public void onAccountClick(View view) {
+        Intent intent = new Intent(this, AccountActivity.class);
+        startActivity(intent);
     }
 
     @Override

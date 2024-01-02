@@ -18,7 +18,7 @@ public class EntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
 
-        startActivity(new Intent(this, LocalGameActivity.class));
+        // startActivity(new Intent(this, LocalGameActivity.class));
     }
 
     public void onLoginClick(View v) {
