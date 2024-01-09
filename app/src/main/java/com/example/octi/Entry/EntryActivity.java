@@ -13,12 +13,20 @@ import com.example.octi.Register.RegisterActivity;
 
 public class EntryActivity extends AppCompatActivity {
 
+    EntryPresenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
 
-        // startActivity(new Intent(this, LocalGameActivity.class));
+        presenter = new EntryPresenter(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        presenter.checkSignedInOnStart();
     }
 
     public void onLoginClick(View v) {

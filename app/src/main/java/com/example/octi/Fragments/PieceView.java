@@ -2,9 +2,9 @@ package com.example.octi.Fragments;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;
@@ -18,8 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PieceView extends View {
-
+public class PieceView extends View{
     private static final Map<Vector2D, Integer> vec2ArrowDrawable;
 
     static {
@@ -40,13 +39,15 @@ public class PieceView extends View {
     private Drawable octagonArrowFlippedDrawable;
     private Octi octi;
 
+    private boolean selected = false;
+
     public PieceView(Context context) {
         super(context);
+
         octagonDrawable = ContextCompat.getDrawable(context, R.drawable.octigon);
         octagonArrowDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_team_arrow);
         octagonArrowFlippedDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_team_arrow_flipped);
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -69,6 +70,14 @@ public class PieceView extends View {
         octagonDrawable.setBounds(canvas.getClipBounds());
         arrowDrawable.setBounds(canvas.getClipBounds());
 
+        if (selected) {
+            octagonDrawable.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+            arrowDrawable.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+        } else {
+            octagonDrawable.clearColorFilter();
+            arrowDrawable.clearColorFilter();
+        }
+
         octagonDrawable.draw(canvas);
         arrowDrawable.draw(canvas);
     }
@@ -78,12 +87,21 @@ public class PieceView extends View {
 
         for (Vector2D arrow: arrows) {
             Drawable arrowDrawable = ContextCompat.getDrawable(getContext(), vec2ArrowDrawable.get(arrow));
+            if (selected) {
+                arrowDrawable.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+            } else {
+                arrowDrawable.clearColorFilter();
+            }
             arrowDrawable.setBounds(canvas.getClipBounds());
             arrowDrawable.draw(canvas);
         }
     }
-
     public void setOcti(Octi octi) {
         this.octi = octi;
+    }
+
+    public void setSelection(boolean state) {
+        selected = state;
+        invalidate();
     }
 }

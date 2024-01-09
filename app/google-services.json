@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "936039820324",
+    "project_id": "octi-abcf2",
+    "storage_bucket": "octi-abcf2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:936039820324:android:a9de69d4f7da6d4a097cb1",
+        "android_client_info": {
+          "package_name": "com.example.octi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoMqIMGUVPCyKbfJsxCNzEwytJ7Al0mVk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

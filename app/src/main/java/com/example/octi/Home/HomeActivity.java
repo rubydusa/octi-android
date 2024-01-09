@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.octi.Game.LocalGameActivity;
-import com.example.octi.Profile.AccountActivity;
+import com.example.octi.Account.AccountActivity;
 import com.example.octi.R;
 import com.example.octi.Room.CreateRoomActivity;
 

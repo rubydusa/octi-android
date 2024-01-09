@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Game.LocalGameActivity">
 
-
     <fragment
         android:id="@+id/board_fragment"
         android:name="com.example.octi.Fragments.BoardFragment"
@@ -20,9 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- hidden only for UI submission -->
     <TableLayout
-        android:visibility="gone"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="1:1"
@@ -54,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
             <Button
+                android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>

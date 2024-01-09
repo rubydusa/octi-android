@@ -31,6 +31,8 @@ public class BoardFragment extends Fragment {
 
     private final Cell[][] cells = new Cell[ROWS][COLUMNS];
 
+    private Cell selectedCell;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,7 +82,16 @@ public class BoardFragment extends Fragment {
     }
 
     private void onCellClicked(Cell cell) {
+        if (selectedCell == null) {
+            cell.setSelection(true);
+        } else if (cell == selectedCell) {
+            cell.setSelection(false);
+        } else {
+            selectedCell.setSelection(false);
+            cell.setSelection(true);
+        }
 
+        selectedCell = cell;
     }
 
     private class Cell {
@@ -145,6 +156,11 @@ public class BoardFragment extends Fragment {
             piece = new PieceView(context);
             piece.setOcti(octi);
             frame.addView(piece);
+        }
+
+        public void setSelection(boolean state) {
+            selected = state;
+            piece.setSelection(selected);
         }
 
         private int getCellColorResource(@Nullable Game.Team color) {
