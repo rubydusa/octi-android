@@ -84,14 +84,15 @@ public class BoardFragment extends Fragment {
     private void onCellClicked(Cell cell) {
         if (selectedCell == null) {
             cell.setSelection(true);
+            selectedCell = cell;
         } else if (cell == selectedCell) {
             cell.setSelection(false);
+            selectedCell = null;
         } else {
             selectedCell.setSelection(false);
             cell.setSelection(true);
+            selectedCell = cell;
         }
-
-        selectedCell = cell;
     }
 
     private class Cell {
@@ -159,8 +160,10 @@ public class BoardFragment extends Fragment {
         }
 
         public void setSelection(boolean state) {
-            selected = state;
-            piece.setSelection(selected);
+            if (piece != null) {
+                selected = state;
+                piece.setSelection(selected);
+            }
         }
 
         private int getCellColorResource(@Nullable Game.Team color) {

@@ -2,6 +2,8 @@ package com.example.octi.models;
 
 import android.content.res.Resources;
 
+import androidx.annotation.NonNull;
+
 import com.example.octi.R;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -20,6 +22,7 @@ import it.unibo.tuprolog.solve.SolverFactory;
 import it.unibo.tuprolog.solve.classic.ClassicSolverFactory;
 import it.unibo.tuprolog.theory.Theory;
 import it.unibo.tuprolog.theory.parsing.ClausesParser;
+import it.unibo.tuprolog.core.parsing.TermParser;
 import kotlin.Pair;
 
 // All game instances share a single static solver.
@@ -31,9 +34,22 @@ public class Game {
         GREEN
     }
 
+    public enum ProngDirection {
+        TOP_LEFT,
+        TOP_CENTER,
+        TOP_RIGHT,
+        MIDDLE_LEFT,
+        MIDDLE_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_CENTER,
+        BOTTOM_RIGHT
+    }
+
     // names of prolog predicates;
     public static final String BASE_GAME = "base_game";
     public static final String JSON = "json";
+
+    public static final String MOVE = "move";
 
     // singletones
     static private Gson gson;
@@ -46,6 +62,9 @@ public class Game {
     // initiating from code now
     private final ArrayList<Pair<Vector2D, Game.Team>> cellColors;
 
+    // TODO
+    // general process of Gson object -> prolog term
+    // general process of prolog term -> Gson object
     public Game(Resources res) {
         initializeGson();
         initializeSolver(res);
@@ -54,7 +73,6 @@ public class Game {
 
         // variable names are only descriptive and can be changed
         Var baseGameVar = Var.of("BaseGame");
-        Var jsonRepresentationVar = Var.of("JsonRepresentation");
 
         // get prolog-representation of initial game state
         Solution baseGameSolution = solver.solveOnce(
@@ -62,10 +80,23 @@ public class Game {
         );
         Struct prologData = baseGameVar.get(baseGameSolution.getSubstitution()).castToStruct();
 
+        GameState.Data gameStateData = prologTermToGson(prologData, GameState.Data.class);
+        gameState = new GameState(gameStateData, prologData);
+    }
+
+    public ArrayList<Pair<Vector2D, Team>> getCellColors() {
+        return cellColors;
+    }
+
+    public GameState getGameState() { return gameState; }
+
+    private static <T> T prologTermToGson(Term term, Class<T> c) {
+        Var jsonRepresentationVar = Var.of("JsonRepresentation");
+
         // transform into json-representation of data through prolog
         Struct jsonRepresentationQuery = Struct.of(
                 JSON,
-                baseGameVar.get(baseGameSolution.getSubstitution()),
+                term,
                 jsonRepresentationVar);
         Solution jsonRepresentationSolution = solver.solveOnce(jsonRepresentationQuery);
         Term json = jsonRepresentationVar.get(jsonRepresentationSolution.getSubstitution());
@@ -76,15 +107,17 @@ public class Game {
                 .format(json)
                 .replaceAll("([a-zA-Z_][a-zA-Z0-9_]*)", "\"$1\"");
 
-        GameState.Data gameStateData = gson.fromJson(jsonString, GameState.Data.class);
-        gameState = new GameState(gameStateData, prologData);
+        return gson.fromJson(jsonString, c);
     }
 
-    public ArrayList<Pair<Vector2D, Team>> getCellColors() {
-        return cellColors;
-    }
+    @NonNull
+    private static Term gsonToPrologTerm(Object o) {
+        String oAsJsonString = gson
+                .toJson(o)
+                .replaceAll("\"([a-zA-Z_][a-zA-Z0-9_]*)\"", "$1");
 
-    public GameState getGameState() { return gameState; }
+        return TermParser.withStandardOperators().parseTerm(oAsJsonString);
+    }
 
     private static void initializeSolver(Resources res) {
         if (solver == null) {

@@ -1,21 +1,13 @@
 package com.example.octi.Game;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 
 import com.example.octi.Fragments.BoardFragment;
 import com.example.octi.R;
 import com.example.octi.models.Game;
-import com.example.octi.models.Vector2D;
-
-import java.util.List;
-
-import kotlin.Pair;
 
 public class LocalGameActivity extends AppCompatActivity {
     LocalGamePresenter presenter;
@@ -33,5 +25,29 @@ public class LocalGameActivity extends AppCompatActivity {
 
     public void drawBoard(Game game) {
         board.drawBoard(game);
+    }
+
+    public void topLeftProngOnClick(View view) {
+    }
+
+    public void topCenterProngOnClick(View view) {
+    }
+
+    public void topRightProngOnClick(View view) {
+    }
+
+    public void middleLeftProngOnClick(View view) {
+    }
+
+    public void middleRightProngOnClick(View view) {
+    }
+
+    public void bottomLeftProngOnClick(View view) {
+    }
+
+    public void bottomCenterProngOnClick(View view) {
+    }
+
+    public void bottomRightProngOnClick(View view) {
     }
 }

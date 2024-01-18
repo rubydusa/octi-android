@@ -1,6 +1,7 @@
 package com.example.octi.Register;
 
 import android.content.Intent;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -29,8 +30,8 @@ public class RegisterPresenter {
                             Intent intent = new Intent(view, HomeActivity.class);
                             view.startActivity(intent);
                         } else {
-                            // If sign in fails, display a message to the user.
-
+                            Toast toast = Toast.makeText(view, "Register failed", Toast.LENGTH_SHORT);
+                            toast.show();
                         }
                     }
                 });

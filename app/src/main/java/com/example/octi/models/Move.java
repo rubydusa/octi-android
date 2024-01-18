@@ -17,8 +17,8 @@ public class Move {
         CHAIN
     }
 
-    private MoveType type;
-    private Vector2D target;
-    private Vector2D action;
-    private List<Vector2D> rest;
+    public MoveType type;
+    public Vector2D target;
+    public Vector2D action;
+    public List<Vector2D> rest;
 }

@@ -34,22 +34,26 @@
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="topLeftProngOnClick"/>
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="topCenterProngOnClick"/>
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="topRightProngOnClick"/>
         </TableRow>
         <TableRow
             android:layout_weight="1">
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="middleLeftProngOnClick"/>
             <Button
                 android:visibility="invisible"
                 android:layout_width="0dp"
@@ -58,22 +62,26 @@
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="middleRightProngOnClick"/>
         </TableRow>
         <TableRow
             android:layout_weight="1">
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="bottomLeftProngOnClick"/>
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="bottomCenterProngOnClick"/>
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="bottomRightProngOnClick"/>
         </TableRow>
     </TableLayout>
 

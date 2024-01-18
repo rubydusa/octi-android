@@ -1,6 +1,7 @@
 package com.example.octi.Login;
 
 import android.content.Intent;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -29,7 +30,8 @@ public class LoginPresenter {
                             Intent intent = new Intent(view, HomeActivity.class);
                             view.startActivity(intent);
                         } else {
-
+                            Toast toast = Toast.makeText(view, "Login failed", Toast.LENGTH_SHORT);
+                            toast.show();
                         }
                     }
                 });
