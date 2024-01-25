@@ -17,12 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.octi.R;
 import com.example.octi.models.Game;
-import com.example.octi.models.Octi;
-import com.example.octi.models.Vector2D;
-
-import java.util.List;
-
-import kotlin.Pair;
+import com.example.octi.models.Pod;
 
 public class BoardFragment extends Fragment {
 
@@ -159,9 +154,9 @@ public class BoardFragment extends Fragment {
             }
         }
 
-        public void setPiece(Octi octi) {
+        public void setPiece(Pod pod) {
             piece = new PieceView(context);
-            piece.setOcti(octi);
+            piece.setOcti(pod);
             frame.addView(piece);
         }
 

@@ -5,4 +5,6 @@ public class Game {
         RED,
         GREEN
     }
+
+    private GameState currentGameState;
 }

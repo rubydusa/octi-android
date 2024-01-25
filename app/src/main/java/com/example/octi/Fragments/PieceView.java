@@ -11,11 +11,10 @@ import androidx.core.content.ContextCompat;
 
 import com.example.octi.R;
 import com.example.octi.models.Game;
-import com.example.octi.models.Octi;
+import com.example.octi.models.Pod;
 import com.example.octi.models.Vector2D;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PieceView extends View{
@@ -37,7 +36,7 @@ public class PieceView extends View{
     private Drawable octagonArrowDrawable;
 
     private Drawable octagonArrowFlippedDrawable;
-    private Octi octi;
+    private Pod pod;
 
     private boolean selected = false;
 
@@ -57,7 +56,7 @@ public class PieceView extends View{
     }
 
     private void drawOctagon(Canvas canvas) {
-        Game.Team team = octi.getTeam();
+        Game.Team team = pod.getTeam();
         Drawable arrowDrawable = octagonArrowDrawable;
 
         if (team == Game.Team.RED) {
@@ -93,14 +92,14 @@ public class PieceView extends View{
             } else {
                 arrowDrawable.clearColorFilter();
             }
-            arrowDrawable.setBounds(canvas.getClipBounds());
+            arrowDrawablene.setBounds(canvas.getClipBounds());
             arrowDrawable.draw(canvas);
         }
     }
     */
 
-    public void setOcti(Octi octi) {
-        this.octi = octi;
+    public void setOcti(Pod pod) {
+        this.pod = pod;
     }
 
     public void setSelection(boolean state) {
