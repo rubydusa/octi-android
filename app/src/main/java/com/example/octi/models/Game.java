@@ -90,6 +90,33 @@ public class Game {
 
     public GameState getGameState() { return gameState; }
 
+    public boolean isMovePossible(Move move) {
+        Term moveAsJsonPrologTerm = gsonToPrologTerm(move);
+        Var moveVar = Var.of("Move");
+
+        Solution moveSolution = solver.solveOnce(
+                Struct.of(JSON, moveVar, moveAsJsonPrologTerm)
+        );
+
+        if (moveSolution.isNo()) {
+            return false;
+        }
+
+        Term moveAsPrologTerm = moveVar.get(moveSolution.getSubstitution());
+        Var nextGameStateVar = Var.of("Game");
+
+        Solution gameSolution = solver.solveOnce(
+                Struct.of(
+                        "turn_1",
+                        getGameState().getPrologData(),
+                        nextGameStateVar,
+                        moveAsPrologTerm
+                )
+        );
+
+        return gameSolution.isYes();
+    }
+
     private static <T> T prologTermToGson(Term term, Class<T> c) {
         Var jsonRepresentationVar = Var.of("JsonRepresentation");
 

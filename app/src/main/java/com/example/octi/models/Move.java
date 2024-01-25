@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Move {
 
-    enum MoveType {
+    public enum MoveType {
         @SerializedName("place")
         PLACE,
         @SerializedName("move")
@@ -17,8 +17,15 @@ public class Move {
         CHAIN
     }
 
-    public MoveType type;
-    public Vector2D target;
-    public Vector2D action;
-    public List<Vector2D> rest;
+    private MoveType type;
+    private Vector2D target;
+    private Vector2D action;
+    private List<Vector2D> rest;
+
+    public Move(MoveType type, Vector2D target, Vector2D action, List<Vector2D> rest) {
+        this.type = type;
+        this.target = target;
+        this.action = action;
+        this.rest = rest;
+    }
 }
