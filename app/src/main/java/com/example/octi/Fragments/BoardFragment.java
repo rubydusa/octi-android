@@ -59,11 +59,14 @@ public class BoardFragment extends Fragment {
         return view;
     }
 
+    /*
     public void drawBoard(Game game) {
         colorCells(game.getCellColors());
         drawPieces(game.getGameState().getData().getOctis());
     }
+    */
 
+    /*
     private void colorCells(List<Pair<Vector2D, Game.Team>> colors) {
         for (Pair<Vector2D, Game.Team> cellColor : colors) {
             Vector2D coordinates = cellColor.getFirst();
@@ -71,7 +74,9 @@ public class BoardFragment extends Fragment {
             cells[coordinates.getY()][coordinates.getX()].setCellColor(color);
         }
     }
+    */
 
+    /*
     private void drawPieces(List<Octi> pieces) {
         for (Octi piece : pieces) {
             Vector2D pos = piece.getPosition();
@@ -80,6 +85,7 @@ public class BoardFragment extends Fragment {
             cells[y][x].setPiece(piece);
         }
     }
+     */
 
     private void onCellClicked(Cell cell) {
         if (selectedCell == null) {

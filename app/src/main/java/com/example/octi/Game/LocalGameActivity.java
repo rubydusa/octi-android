@@ -8,11 +8,6 @@ import android.view.View;
 import com.example.octi.Fragments.BoardFragment;
 import com.example.octi.R;
 import com.example.octi.models.Game;
-import com.example.octi.models.Move;
-import com.example.octi.models.Vector2D;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LocalGameActivity extends AppCompatActivity {
     LocalGamePresenter presenter;
@@ -29,7 +24,7 @@ public class LocalGameActivity extends AppCompatActivity {
     }
 
     public void drawBoard(Game game) {
-        board.drawBoard(game);
+        // board.drawBoard(game);
     }
 
     public void topLeftProngOnClick(View view) {

@@ -53,7 +53,7 @@ public class PieceView extends View{
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawOctagon(canvas);
-        drawArrows(canvas);
+        // drawArrows(canvas);
     }
 
     private void drawOctagon(Canvas canvas) {
@@ -82,6 +82,7 @@ public class PieceView extends View{
         arrowDrawable.draw(canvas);
     }
 
+    /*
     private void drawArrows(Canvas canvas) {
         List<Vector2D> arrows = octi.getArrows();
 
@@ -96,6 +97,8 @@ public class PieceView extends View{
             arrowDrawable.draw(canvas);
         }
     }
+    */
+
     public void setOcti(Octi octi) {
         this.octi = octi;
     }
