@@ -1,11 +1,5 @@
 package com.example.octi.Game;
 
-import android.util.Log;
-
-import com.example.octi.models.Vector2D;
-
-import java.util.ArrayList;
-
 public class LocalGamePresenter {
     LocalGameActivity view;
     // Game game;

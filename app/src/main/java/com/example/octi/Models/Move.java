@@ -1,8 +1,6 @@
-package com.example.octi.models;
+package com.example.octi.Models;
 
 import java.util.ArrayList;
-
-import kotlin.Pair;
 
 public class Move {
     public enum MoveType {

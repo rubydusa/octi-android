@@ -1,4 +1,4 @@
-package com.example.octi.models;
+package com.example.octi.Models;
 
 public class Game {
     public enum Team {

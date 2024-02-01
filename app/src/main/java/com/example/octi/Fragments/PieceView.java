@@ -10,9 +10,9 @@ import android.view.View;
 import androidx.core.content.ContextCompat;
 
 import com.example.octi.R;
-import com.example.octi.models.Game;
-import com.example.octi.models.Pod;
-import com.example.octi.models.Vector2D;
+import com.example.octi.Models.Game;
+import com.example.octi.Models.Pod;
+import com.example.octi.Models.Vector2D;
 
 import java.util.HashMap;
 import java.util.Map;

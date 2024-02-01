@@ -16,8 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.octi.R;
-import com.example.octi.models.Game;
-import com.example.octi.models.Pod;
+import com.example.octi.Models.Game;
+import com.example.octi.Models.Pod;
 
 public class BoardFragment extends Fragment {
 

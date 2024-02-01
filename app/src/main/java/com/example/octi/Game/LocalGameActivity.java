@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.example.octi.Fragments.BoardFragment;
 import com.example.octi.R;
-import com.example.octi.models.Game;
+import com.example.octi.Models.Game;
 
 public class LocalGameActivity extends AppCompatActivity {
     LocalGamePresenter presenter;
