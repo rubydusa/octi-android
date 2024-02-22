@@ -5,7 +5,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.octi.Firebase.Repository;
 import com.example.octi.Home.HomeActivity;
+import com.example.octi.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -20,18 +22,24 @@ public class RegisterPresenter {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public void register(String email, String password) {
+    public void register(String username, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(view, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            User newUser = new User(email, username, FirebaseAuth.getInstance().getUid());
+                            Repository.getInstance().addUser(newUser);
+
                             Intent intent = new Intent(view, HomeActivity.class);
                             view.startActivity(intent);
                         } else {
-                            Toast toast = Toast.makeText(view, "Register failed", Toast.LENGTH_SHORT);
-                            toast.show();
+                            Exception e = task.getException();
+                            if (e != null) {
+                                String message = e.getLocalizedMessage();
+                                Toast toast = Toast.makeText(view, message, Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
                         }
                     }
                 });

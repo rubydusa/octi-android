@@ -19,11 +19,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginClick(View view) {
-        EditText usernameField = findViewById(R.id.et_username_login_activity);
+        EditText emailField = findViewById(R.id.et_email_login_activity);
         EditText passwordField = findViewById(R.id.et_password_login_activity);
 
         presenter.login(
-                usernameField.getText().toString(),
+                emailField.getText().toString(),
                 passwordField.getText().toString()
         );
     }
