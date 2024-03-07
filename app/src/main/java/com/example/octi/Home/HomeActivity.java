@@ -12,11 +12,13 @@ import com.example.octi.R;
 import com.example.octi.Room.CreateRoomActivity;
 
 public class HomeActivity extends AppCompatActivity implements GameOptionsDialog.GameOptionsListener {
+    HomePresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        presenter = new HomePresenter(this);
     }
 
     public void onPlayClick(View view) {
@@ -38,7 +40,12 @@ public class HomeActivity extends AppCompatActivity implements GameOptionsDialog
 
     @Override
     public void onCreateRoomSelected() {
+        presenter.onClickCreateRoom();
+    }
+
+    public void navigateToCreateRoom(String gameId) {
         Intent intent = new Intent(this, CreateRoomActivity.class);
+        intent.putExtra(getString(R.string.game_id), gameId);
         startActivity(intent);
     }
 

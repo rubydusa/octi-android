@@ -1,5 +1,6 @@
 package com.example.octi.Firebase;
 
+import com.example.octi.Models.Game;
 import com.example.octi.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -23,5 +24,18 @@ public class Repository {
         DatabaseReference myRef = database.getReference("Users/" + FirebaseAuth.getInstance().getUid());
 
         myRef.setValue(user);
+    }
+
+    public void updateGame(Game game) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef;
+        if (game.getGameId() == null) {
+            myRef = database.getReference("Games/").push();
+            game.setGameId(myRef.getKey());
+        }
+        else {
+            myRef = database.getReference("Games/" + game.getGameId());
+        }
+        myRef.setValue(game);
     }
 }
