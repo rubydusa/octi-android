@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.example.octi.Game.LocalGameActivity;
@@ -45,6 +46,7 @@ public class HomeActivity extends AppCompatActivity implements GameOptionsDialog
 
     public void navigateToCreateRoom(String gameId) {
         Intent intent = new Intent(this, CreateRoomActivity.class);
+        Log.d("fuck", "HomeActivity: GameId " + gameId);
         intent.putExtra(getString(R.string.game_id), gameId);
         startActivity(intent);
     }

@@ -6,11 +6,21 @@ public class Game {
         GREEN
     }
 
+    public enum Status {
+        PENDING,
+        ACTIVE,
+        FINISHED
+    }
+
     private String gameId;
     private String user1Id;
     private String user2Id;
 
-    private GameState currentGameState;
+    private Status status;
+
+    // private GameState currentGameState;
+
+    public Game() {}
 
     public Game(String gameId, String user1Id, String user2Id) {
         this.gameId = gameId;
@@ -40,5 +50,13 @@ public class Game {
 
     public void setUser2Id(String user2Id) {
         this.user2Id = user2Id;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
