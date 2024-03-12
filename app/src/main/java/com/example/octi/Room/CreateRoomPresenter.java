@@ -24,7 +24,6 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
 
     @Override
     public void updateGame(Game game) {
-        Log.d("fuck", "updateGame");
         this.game = game;
         if(game.getStatus()==Game.Status.ACTIVE){
             view.navigateToGame(game.getGameId());

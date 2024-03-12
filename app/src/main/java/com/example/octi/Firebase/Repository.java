@@ -55,38 +55,22 @@ public class Repository {
         FirebaseDatabase database = FirebaseDatabase.getInstance(URL);
         DatabaseReference myRef;
         if (game.getGameId() == null) {
-            Log.d("fuck", "updateGame: no game id");
             myRef = database.getReference("Games/").push();
             game.setGameId(myRef.getKey());
         }
         else {
-            Log.d("fuck", "updateGame: gameId: " + game.getGameId());
             myRef = database.getReference("Games/" + game.getGameId());
         }
-        // myRef.setValue(game);
-        myRef.setValue(game, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError != null) {
-                    Log.d("updateGame", "Data could not be saved " + databaseError.getMessage());
-                } else {
-                    Log.d("updateGame", "Data saved successfully.");
-                }
-            }
-        });
+        myRef.setValue(game);
     }
 
-    LoadGameListener gLoadGameListener;
     public void readGame(String id, LoadGameListener loadGameListener) {
-        gLoadGameListener = loadGameListener;
         FirebaseDatabase database = FirebaseDatabase.getInstance(URL);
         DatabaseReference myRef = database.getReference("Games/" + id);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("fuck", "onDataChange: readGame " + id);
-
-                gLoadGameListener.updateGame(dataSnapshot.getValue(Game.class));
+                loadGameListener.updateGame(dataSnapshot.getValue(Game.class));
             }
 
             @Override

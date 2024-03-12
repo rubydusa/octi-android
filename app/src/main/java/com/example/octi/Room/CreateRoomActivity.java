@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.octi.Models.Game;
@@ -25,10 +26,11 @@ public class CreateRoomActivity extends AppCompatActivity {
     }
 
     public void navigateToGame(String gameId) {
-        Log.d("fuck", "navigateToGame: Done!");
+
     }
 
     public void setUI1(User user) {
+        setButton(true);
         TextView tvPlayer1 = findViewById(R.id.tv_user_id_1_create_room);
         tvPlayer1.setText(user.getName());
     }
@@ -36,5 +38,10 @@ public class CreateRoomActivity extends AppCompatActivity {
     public void setUI2(User user) {
         TextView tvPlayer2 = findViewById(R.id.tv_user_id_2_create_room);
         tvPlayer2.setText(user.getName());
+    }
+
+    public void setButton (boolean state) {
+        Button btn = findViewById(R.id.btn_start_room_create_room);
+        btn.setEnabled(state);
     }
 }

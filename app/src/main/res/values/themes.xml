@@ -8,8 +8,8 @@
     <style name="Theme.Octi" parent="Base.Theme.Octi" />
 
     <style name="WoodThemeButton" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/wood_yellow</item>
-        <item name="android:textColor">@color/wood_black</item>
+        <item name="backgroundTint">@color/wood_theme_button_color</item>
+        <item name="android:textColor">@color/wood_theme_text_color</item>
         <item name="android:textSize">18sp</item>
     </style>
 
@@ -22,4 +22,6 @@
         <item name="strokeColor">@android:color/white</item>
         <item name="strokeWidth">2dp</item>
     </style>
+
+    <color name="gray">#888888</color>
 </resources>

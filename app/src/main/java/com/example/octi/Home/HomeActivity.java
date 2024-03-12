@@ -46,7 +46,6 @@ public class HomeActivity extends AppCompatActivity implements GameOptionsDialog
 
     public void navigateToCreateRoom(String gameId) {
         Intent intent = new Intent(this, CreateRoomActivity.class);
-        Log.d("fuck", "HomeActivity: GameId " + gameId);
         intent.putExtra(getString(R.string.game_id), gameId);
         startActivity(intent);
     }
