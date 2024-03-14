@@ -2,32 +2,49 @@ package com.example.octi.Models;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
+import kotlin.Pair;
+
 public class GameState implements Cloneable {
     private Game.Team turn;
-    private TreeMap<Game.Team, Integer> prongCounts;
-    private HashMap<Vector2D, Pod> pods;  // (0, 0) is top left
+
+    private int redProngCount;
+    private int greenProngCount;
+    private ArrayList<Pod> pods;
+    private ArrayList<ColoredCell> coloredCells;
 
     // default state
     public GameState() {
         turn = Game.Team.RED;
 
-        prongCounts = new TreeMap<>();
-        prongCounts.put(Game.Team.RED, 12);
-        prongCounts.put(Game.Team.GREEN, 12);
+        redProngCount = 12;
+        greenProngCount = 12;
 
-        pods = new HashMap<>();
-        pods.put(new Vector2D(1, 1), new Pod(Game.Team.GREEN));
-        pods.put(new Vector2D(2, 1), new Pod(Game.Team.GREEN));
-        pods.put(new Vector2D(3, 1), new Pod(Game.Team.GREEN));
-        pods.put(new Vector2D(4, 1), new Pod(Game.Team.GREEN));
-        pods.put(new Vector2D(1, 5), new Pod(Game.Team.RED));
-        pods.put(new Vector2D(2, 5), new Pod(Game.Team.RED));
-        pods.put(new Vector2D(3, 5), new Pod(Game.Team.RED));
-        pods.put(new Vector2D(4, 5), new Pod(Game.Team.RED));
+        pods = new ArrayList<>();
+        pods.add(new Pod(Game.Team.GREEN, new Vector2D(1, 1)));
+        pods.add(new Pod(Game.Team.GREEN, new Vector2D(2, 1)));
+        pods.add(new Pod(Game.Team.GREEN, new Vector2D(3, 1)));
+        pods.add(new Pod(Game.Team.GREEN, new Vector2D(4, 1)));
+        pods.add(new Pod(Game.Team.GREEN, new Vector2D(1, 5)));
+        pods.add(new Pod(Game.Team.GREEN, new Vector2D(2, 5)));
+        pods.add(new Pod(Game.Team.GREEN, new Vector2D(3, 5)));
+        pods.add(new Pod(Game.Team.GREEN, new Vector2D(4, 5)));
+
+        coloredCells = new ArrayList<>();
+        coloredCells.add(new ColoredCell(new Vector2D(1, 1), Game.Team.GREEN));
+        coloredCells.add(new ColoredCell(new Vector2D(2, 1), Game.Team.GREEN));
+        coloredCells.add(new ColoredCell(new Vector2D(3, 1), Game.Team.GREEN));
+        coloredCells.add(new ColoredCell(new Vector2D(4, 1), Game.Team.GREEN));
+        coloredCells.add(new ColoredCell(new Vector2D(1, 5), Game.Team.RED));
+        coloredCells.add(new ColoredCell(new Vector2D(2, 5), Game.Team.RED));
+        coloredCells.add(new ColoredCell(new Vector2D(3, 5), Game.Team.RED));
+        coloredCells.add(new ColoredCell(new Vector2D(4, 5), Game.Team.RED));
     }
 
     public Optional<GameState> makeMove(Move move) {
@@ -36,14 +53,20 @@ public class GameState implements Cloneable {
         return Optional.empty();
     }
 
+    public List<ColoredCell> getColoredCells() {
+        return coloredCells;
+    }
+
+    public List<Pod> getPods() {
+        return pods;
+    }
+
     @NonNull
     @Override
     public GameState clone() {
         try {
             GameState clone = (GameState) super.clone();
-            clone.turn = turn;
-            clone.prongCounts = (TreeMap<Game.Team, Integer>) prongCounts.clone();
-            clone.pods = (HashMap<Vector2D, Pod>) pods.clone();
+            clone.pods = (ArrayList<Pod>) pods.clone();
 
             return clone;
         } catch (CloneNotSupportedException e) {

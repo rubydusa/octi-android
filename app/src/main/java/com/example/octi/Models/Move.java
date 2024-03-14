@@ -3,6 +3,9 @@ package com.example.octi.Models;
 import java.util.ArrayList;
 
 public class Move {
+
+    public Move() {}
+
     public enum MoveType {
         PLACE,
         JUMP

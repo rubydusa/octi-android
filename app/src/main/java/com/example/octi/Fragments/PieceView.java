@@ -98,7 +98,7 @@ public class PieceView extends View{
     }
     */
 
-    public void setOcti(Pod pod) {
+    public void setPod(Pod pod) {
         this.pod = pod;
     }
 

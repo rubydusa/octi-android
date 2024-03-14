@@ -18,7 +18,7 @@ public class Game {
 
     private Status status;
 
-    // private GameState currentGameState;
+    private GameState currentGameState;
 
     public Game() {}
 
@@ -26,6 +26,8 @@ public class Game {
         this.gameId = gameId;
         this.user1Id = user1Id;
         this.user2Id = user2Id;
+
+        currentGameState = new GameState();
     }
 
     public String getGameId() {
@@ -58,5 +60,9 @@ public class Game {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public GameState getCurrentGameState() {
+        return currentGameState;
     }
 }

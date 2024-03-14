@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/board_fragment"
-        android:name="com.example.pod.Fragments.BoardFragment"
+        android:name="com.example.octi.Fragments.BoardFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="24dp"

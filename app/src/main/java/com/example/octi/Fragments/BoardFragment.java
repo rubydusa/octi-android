@@ -15,9 +15,15 @@ import android.widget.GridLayout;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.octi.Models.ColoredCell;
+import com.example.octi.Models.Vector2D;
 import com.example.octi.R;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.Pod;
+
+import java.util.List;
+
+import kotlin.Pair;
 
 public class BoardFragment extends Fragment {
 
@@ -54,33 +60,27 @@ public class BoardFragment extends Fragment {
         return view;
     }
 
-    /*
     public void drawBoard(Game game) {
-        colorCells(game.getCellColors());
-        drawPieces(game.getGameState().getData().getOctis());
+        colorCells(game.getCurrentGameState().getColoredCells());
+        drawPieces(game.getCurrentGameState().getPods());
     }
-    */
 
-    /*
-    private void colorCells(List<Pair<Vector2D, Game.Team>> colors) {
-        for (Pair<Vector2D, Game.Team> cellColor : colors) {
-            Vector2D coordinates = cellColor.getFirst();
-            Game.Team color = cellColor.getSecond();
+    private void colorCells(List<ColoredCell> colors) {
+        for (ColoredCell coloredCell : colors) {
+            Vector2D coordinates = coloredCell.getPosition();
+            Game.Team color = coloredCell.getColor();
             cells[coordinates.getY()][coordinates.getX()].setCellColor(color);
         }
     }
-    */
 
-    /*
-    private void drawPieces(List<Octi> pieces) {
-        for (Octi piece : pieces) {
+    private void drawPieces(List<Pod> pieces) {
+        for (Pod piece : pieces) {
             Vector2D pos = piece.getPosition();
             int x = pos.getX();
             int y = pos.getY();
             cells[y][x].setPiece(piece);
         }
     }
-     */
 
     private void onCellClicked(Cell cell) {
         if (selectedCell == null) {
@@ -156,7 +156,7 @@ public class BoardFragment extends Fragment {
 
         public void setPiece(Pod pod) {
             piece = new PieceView(context);
-            piece.setOcti(pod);
+            piece.setPod(pod);
             frame.addView(piece);
         }
 

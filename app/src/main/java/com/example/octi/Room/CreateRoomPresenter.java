@@ -50,4 +50,12 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
             view.setUI2(user);
         }
     }
+
+    public void updateStartButton() {
+        view.setButton(player1 != null && player2 != null);
+    }
+
+    public void startGame() {
+        view.navigateToGame(id);
+    }
 }
