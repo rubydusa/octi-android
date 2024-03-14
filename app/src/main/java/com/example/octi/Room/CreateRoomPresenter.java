@@ -5,6 +5,9 @@ import android.util.Log;
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.User;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 public class CreateRoomPresenter implements Repository.LoadGameListener, Repository.LoadUserListener {
     CreateRoomActivity view;
@@ -19,6 +22,7 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
         this.view = view;
         this.id = id;
 
+        Log.d("CreateRoomPresenter", id);
         Repository.getInstance().readGame(id, this);
     }
 
@@ -29,25 +33,24 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
             view.navigateToGame(game.getGameId());
             return;
         }
-        if(game.getUser2Id() == null){
-            Repository.getInstance().readUser(game.getUser1Id(), this);
-        }
-        else{
-            Repository.getInstance().readUser(game.getUser1Id(), this);
-            Repository.getInstance().readUser(game.getUser2Id(), this);
-        }
-
+        Repository.getInstance().readUser(FirebaseAuth.getInstance().getUid(), this);
     }
 
     @Override
     public void updateUser(User user) {
-        if(user.getId().equals(game.getUser1Id())){
-            this.player1 = user;
-            view.setUI1(user);
+        if (game.getUser1() == null) {
+            game.setUser1(user);
+            Repository.getInstance().updateGame(game);
+        } else if (game.getUser2() == null && !Objects.equals(game.getUser1().getId(), user.getId())) {
+            game.setUser2(user);
+            Repository.getInstance().updateGame(game);
         }
-        else{
-            this.player2 = user;
-            view.setUI2(user);
+
+        if (game.getUser1() != null) {
+            view.setUI1(game.getUser1());
+        }
+        if (game.getUser2() != null) {
+            view.setUI2(game.getUser2());
         }
     }
 

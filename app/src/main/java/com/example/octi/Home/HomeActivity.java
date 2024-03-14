@@ -52,6 +52,8 @@ public class HomeActivity extends AppCompatActivity implements GameOptionsDialog
 
     @Override
     public void onJoinRoomSelected(String roomCode) {
-
+        Intent intent = new Intent(this, CreateRoomActivity.class);
+        intent.putExtra(getString(R.string.game_id), roomCode);
+        startActivity(intent);
     }
 }

@@ -14,8 +14,7 @@ public class HomePresenter {
     }
 
     public void onClickCreateRoom() {
-        Game game = new Game(null, FirebaseAuth.getInstance().getUid(), null);
-        Log.d("fuck", "onClickCreateRoom: starts");
+        Game game = new Game(null, null, null);
         Repository.getInstance().updateGame(game);
         view.navigateToCreateRoom(game.getGameId());
     }
