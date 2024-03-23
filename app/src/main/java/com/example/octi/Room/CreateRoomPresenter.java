@@ -19,7 +19,7 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
         this.view = view;
         this.id = id;
 
-        Log.d("CreateRoomPresenter", id);
+        view.setRoomCode(id);
         Repository.getInstance().readGame(id, this);
     }
 

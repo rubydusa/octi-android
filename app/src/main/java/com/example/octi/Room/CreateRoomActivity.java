@@ -4,13 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.octi.Game.OnlineGameActivity;
-import com.example.octi.Models.Game;
 import com.example.octi.Models.User;
 import com.example.octi.R;
 
@@ -55,6 +53,11 @@ public class CreateRoomActivity extends AppCompatActivity {
     public void setRoomMessage(String message) {
         TextView tvRoomMessage = findViewById(R.id.tv_room_message_create_room);
         tvRoomMessage.setText(message);
+    }
+
+    public void setRoomCode(String code) {
+        TextView tvRoomCode = findViewById(R.id.tv_room_code_create_room);
+        tvRoomCode.setText("Room Code: " + code);
     }
 
     public void onClickNavigateToGame(View view) {

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.User;
 import com.example.octi.Room.CreateRoomPresenter;
+import com.example.octi.RoomCodeGenerator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,16 +52,26 @@ public class Repository {
         });
     }
 
+    public void createNewGame(final Callback<Game> callback) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance(URL);
+        DatabaseReference gamesRef = database.getReference("Games");
+
+        Game game = new Game(null, null, null);
+
+        generateRoomCode(gamesRef, newRoomCode -> {
+            DatabaseReference newGameRef = gamesRef.child(newRoomCode);
+            game.setGameId(newRoomCode);
+            newGameRef.setValue(game);
+
+            callback.onComplete(game);
+        });
+    }
+
+        // assumes gameid is not null
     public void updateGame(Game game) {
         FirebaseDatabase database = FirebaseDatabase.getInstance(URL);
-        DatabaseReference myRef;
-        if (game.getGameId() == null) {
-            myRef = database.getReference("Games/").push();
-            game.setGameId(myRef.getKey());
-        }
-        else {
-            myRef = database.getReference("Games/" + game.getGameId());
-        }
+
+        DatabaseReference myRef = database.getReference("Games/" + game.getGameId());
         myRef.setValue(game);
     }
 
@@ -80,11 +91,39 @@ public class Repository {
         });
     }
 
+    private void generateRoomCode(final DatabaseReference gamesRef, final Callback<String> callback) {
+        String potentialCode = RoomCodeGenerator.generateCode();
+        gamesRef.child(potentialCode).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    // This code is unique
+                    callback.onComplete(potentialCode);
+                } else {
+                    // Code already exists, try again
+                    generateRoomCode(gamesRef, callback);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle the error
+                Log.e("Firebase", "Error checking game code uniqueness", databaseError.toException());
+                callback.onComplete(null);
+            }
+        });
+    }
+
     public interface LoadGameListener {
         void updateGame(Game game);
     }
 
     public interface LoadUserListener {
         void updateUser(User user);
+    }
+
+    // Define a callback interface
+    public interface Callback<T> {
+        void onComplete(T result);
     }
 }
