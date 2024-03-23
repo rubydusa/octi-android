@@ -58,7 +58,12 @@ public class Repository {
 
         Game game = new Game(null, null, null);
 
-        generateRoomCode(gamesRef, newRoomCode -> {
+        generateRoomCode(newRoomCode -> {
+            if (newRoomCode == null) {
+                callback.onComplete(null);
+                return;
+            }
+
             DatabaseReference newGameRef = gamesRef.child(newRoomCode);
             game.setGameId(newRoomCode);
             newGameRef.setValue(game);
@@ -91,25 +96,36 @@ public class Repository {
         });
     }
 
-    private void generateRoomCode(final DatabaseReference gamesRef, final Callback<String> callback) {
-        String potentialCode = RoomCodeGenerator.generateCode();
-        gamesRef.child(potentialCode).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void gameExists(String id, final Callback<Boolean> callback) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance(URL);
+        DatabaseReference gamesRef = database.getReference("Games");
+        gamesRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    // This code is unique
-                    callback.onComplete(potentialCode);
-                } else {
-                    // Code already exists, try again
-                    generateRoomCode(gamesRef, callback);
-                }
+                callback.onComplete(dataSnapshot.exists());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Handle the error
-                Log.e("Firebase", "Error checking game code uniqueness", databaseError.toException());
+                Log.e("Firebase", "Error checking game code existence", databaseError.toException());
                 callback.onComplete(null);
+            }
+        });
+    }
+
+    private void generateRoomCode(final Callback<String> callback) {
+        String potentialCode = RoomCodeGenerator.generateCode();
+        gameExists(potentialCode, codeExists -> {
+            if (codeExists == null) {
+                callback.onComplete(null);
+                return;
+            }
+
+            if (codeExists) {
+                generateRoomCode(callback);
+            } else {
+                callback.onComplete(potentialCode);
             }
         });
     }

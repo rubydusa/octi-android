@@ -30,6 +30,7 @@ public class CreateRoomActivity extends AppCompatActivity {
         Intent intent = new Intent(this, OnlineGameActivity.class);
         intent.putExtra(getString(R.string.game_id), gameId);
         startActivity(intent);
+        finish();
     }
 
     public void setUI1(User user) {
