@@ -67,6 +67,7 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
     }
 
     public void startGame() {
-        view.navigateToGame(id);
+        game.setStatus(Game.Status.ACTIVE);
+        Repository.getInstance().updateGame(game);
     }
 }
