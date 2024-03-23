@@ -15,9 +15,6 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
 
     Game game;
 
-    User player1;
-    User player2;
-
     public CreateRoomPresenter(CreateRoomActivity view, String id) {
         this.view = view;
         this.id = id;
@@ -55,7 +52,18 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
     }
 
     public void updateStartButton() {
-        view.setButton(player1 != null && player2 != null);
+        boolean isGameReady = game.getUser1() != null && game.getUser2() != null;
+        boolean isPlayer1 = game.getUser1().getId().equals(FirebaseAuth.getInstance().getUid());
+
+        if (isGameReady && isPlayer1) {
+            view.setRoomMessage("Room ready! You can start the game");
+        } else if (isGameReady && !isPlayer1) {
+            view.setRoomMessage("Room ready! Wait for host to begin");
+        } else {
+            view.setRoomMessage("Waiting...");
+        }
+
+        view.setButton(isGameReady && isPlayer1);
     }
 
     public void startGame() {

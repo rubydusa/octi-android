@@ -52,6 +52,11 @@ public class CreateRoomActivity extends AppCompatActivity {
         btn.setEnabled(state);
     }
 
+    public void setRoomMessage(String message) {
+        TextView tvRoomMessage = findViewById(R.id.tv_room_message_create_room);
+        tvRoomMessage.setText(message);
+    }
+
     public void onClickNavigateToGame(View view) {
         presenter.startGame();
     }
