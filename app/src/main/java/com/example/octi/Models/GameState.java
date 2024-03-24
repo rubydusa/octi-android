@@ -1,6 +1,10 @@
 package com.example.octi.Models;
 
+import android.graphics.Path;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,8 +51,42 @@ public class GameState implements Cloneable {
         coloredCells.add(new ColoredCell(new Vector2D(4, 5), Game.Team.RED));
     }
 
+    // assumes move structure cannot be wrong, but move may be invalid.
+    // so a move targeting an incorrect position is accepted, but a place move
+    // without an action argument throws
     public Optional<GameState> makeMove(Move move) {
         GameState nextState = this.clone();
+
+        if (move.getMoveType() == Move.MoveType.PLACE) {
+            // no prongs
+            int prongCount = nextState.getProngCount(turn);
+            if (prongCount == 0) {
+                Log.d("ASAD", "makeMove: not enough prongs");
+                return Optional.empty();
+            }
+
+            // no target pod
+            Pod targetPod = nextState.findPod(move.getTarget());
+            if (targetPod == null) {
+                Log.d("ASAD", "makeMove: no target pod");
+                return Optional.empty();
+            }
+
+            Action placeAction = move.getActions().get(0);
+            int prong = placeAction.getValue();
+
+            // prong already exists
+            if (targetPod.getProngs().get(prong)) {
+                Log.d("ASAD", "makeMove: prong Already exists");
+                return Optional.empty();
+            }
+
+            targetPod.getProngs().set(prong, true);
+            nextState.useProng(turn);
+            nextState.nextTurn();
+
+            return Optional.of(nextState);
+        }
 
         return Optional.empty();
     }
@@ -59,6 +97,47 @@ public class GameState implements Cloneable {
 
     public List<Pod> getPods() {
         return pods;
+    }
+
+    public int getProngCount(Game.Team team) {
+        if (team == Game.Team.RED) {
+            return redProngCount;
+        } else {
+            return greenProngCount;
+        }
+    }
+
+    @Nullable
+    private Pod findPod(Vector2D position) {
+        for (Pod pod:
+             pods) {
+            Log.d("ASAD",
+                    "pod pos: " +
+                            pod.getPosition().toString() +
+                            "target pos: " + position.toString()
+            );
+            if (pod.getPosition().equals(position)) {
+                return pod;
+            }
+        }
+
+        return null;
+    }
+
+    private void useProng(Game.Team team) {
+        if (team == Game.Team.RED) {
+            redProngCount--;
+        } else {
+            greenProngCount--;
+        }
+    }
+
+    private void nextTurn() {
+        if (turn == Game.Team.RED) {
+            turn = Game.Team.GREEN;
+        } else {
+            turn = Game.Team.RED;
+        }
     }
 
     @NonNull

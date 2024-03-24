@@ -15,6 +15,7 @@ import com.example.octi.Models.Game;
 import com.example.octi.Models.Pod;
 import com.example.octi.Models.Vector2D;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,9 +87,12 @@ public class PieceView extends View{
 
 
     private void drawArrows(Canvas canvas) {
-        boolean[] prongs = pod.getProngs();
+        ArrayList<Boolean> prongs = pod.getProngs();
 
-        for (int i = 0; i < prongs.length; i++) {
+        for (int i = 0; i < prongs.size(); i++) {
+            if (!prongs.get(i)) {
+                continue;
+            }
             Drawable arrowDrawable = ContextCompat.getDrawable(getContext(), prong2prongDrawable[i]);
             if (selected) {
                 arrowDrawable.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);

@@ -65,6 +65,10 @@ public class BoardFragment extends Fragment {
         drawPieces(game.getCurrentGameState().getPods());
     }
 
+    public Cell getSelectedCell() {
+        return selectedCell;
+    }
+
     private void colorCells(List<ColoredCell> colors) {
         for (ColoredCell coloredCell : colors) {
             Vector2D coordinates = coloredCell.getPosition();
@@ -96,7 +100,7 @@ public class BoardFragment extends Fragment {
         }
     }
 
-    private class Cell {
+    public class Cell {
         private boolean selected = false;
 
         private final FrameLayout frame;
@@ -165,6 +169,14 @@ public class BoardFragment extends Fragment {
                 selected = state;
                 piece.setSelection(selected);
             }
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
         }
 
         private int getCellColorResource(@Nullable Game.Team color) {

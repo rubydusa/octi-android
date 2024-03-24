@@ -1,14 +1,25 @@
 package com.example.octi.Models;
 
+import java.util.ArrayList;
+
 public class Pod {
     private final Game.Team team;
-    private final boolean[] prongs = new boolean[8];
+    private final ArrayList<Boolean> prongs = new ArrayList<>(8);
     private Vector2D position;
 
-    public Pod() { team = Game.Team.RED; }
+    public Pod() {
+        team = Game.Team.RED;
+        for (int i = 0; i < 8; i++) {
+            prongs.add(false);
+        }
+    }
     public Pod(Game.Team team, Vector2D position) {
         this.team = team;
         this.position = position;
+
+        for (int i = 0; i < 8; i++) {
+            prongs.add(false);
+        }
     }
 
     public Game.Team getTeam() {
@@ -20,5 +31,5 @@ public class Pod {
         return position;
     }
 
-    public boolean[] getProngs() { return prongs; }
+    public ArrayList<Boolean> getProngs() { return prongs; }
 }

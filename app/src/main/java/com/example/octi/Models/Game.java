@@ -1,5 +1,7 @@
 package com.example.octi.Models;
 
+import java.util.Optional;
+
 public class Game {
     public enum Team {
         RED,
@@ -28,6 +30,17 @@ public class Game {
         this.user2 = user2;
 
         currentGameState = new GameState();
+    }
+
+    public boolean makeMove(Move move) {
+        Optional<GameState> nextGameState = currentGameState.makeMove(move);
+        if (!nextGameState.isPresent()) {
+            return false;
+        }
+
+        currentGameState = nextGameState.get();
+
+        return true;
     }
 
     public String getGameId() {
