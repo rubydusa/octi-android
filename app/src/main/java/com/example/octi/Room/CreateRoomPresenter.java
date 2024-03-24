@@ -1,7 +1,5 @@
 package com.example.octi.Room;
 
-import android.util.Log;
-
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.User;
@@ -20,7 +18,8 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
         this.id = id;
 
         view.setRoomCode(id);
-        Repository.getInstance().readGame(id, this);
+        Repository.getInstance().setLoadGameListener(this);
+        Repository.getInstance().readGame(id);
     }
 
     @Override
@@ -30,7 +29,8 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
             view.navigateToGame(game.getGameId());
             return;
         }
-        Repository.getInstance().readUser(FirebaseAuth.getInstance().getUid(), this);
+        Repository.getInstance().setLoadUserListener(this);
+        Repository.getInstance().readUser(FirebaseAuth.getInstance().getUid());
     }
 
     @Override

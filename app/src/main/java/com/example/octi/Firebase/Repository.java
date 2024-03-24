@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.example.octi.Models.Game;
 import com.example.octi.Models.User;
-import com.example.octi.Room.CreateRoomPresenter;
 import com.example.octi.RoomCodeGenerator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,14 +34,18 @@ public class Repository {
         myRef.setValue(user);
     }
 
-    public void readUser(String id, LoadUserListener loadUserListener){
+    LoadUserListener currentLoadUserListener;
+    public void setLoadUserListener(LoadUserListener listener) {
+        currentLoadUserListener = listener;
+    }
+    public void readUser(String id){
         FirebaseDatabase database = FirebaseDatabase.getInstance(URL);
         DatabaseReference myRef = database.getReference("Users/" + id);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                loadUserListener.updateUser(user);
+                currentLoadUserListener.updateUser(user);
             }
 
             @Override
@@ -80,13 +83,17 @@ public class Repository {
         myRef.setValue(game);
     }
 
-    public void readGame(String id, LoadGameListener loadGameListener) {
+    LoadGameListener currentLoadGameListener;
+    public void setLoadGameListener(LoadGameListener listener) {
+        currentLoadGameListener = listener;
+    }
+    public void readGame(String id) {
         FirebaseDatabase database = FirebaseDatabase.getInstance(URL);
         DatabaseReference myRef = database.getReference("Games/" + id);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                loadGameListener.updateGame(dataSnapshot.getValue(Game.class));
+                currentLoadGameListener.updateGame(dataSnapshot.getValue(Game.class));
             }
 
             @Override

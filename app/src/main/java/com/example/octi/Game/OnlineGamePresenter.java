@@ -19,7 +19,8 @@ public class OnlineGamePresenter implements Repository.LoadGameListener {
         this.id = id;
         this.board = board;
 
-        Repository.getInstance().readGame(id, this);
+        Repository.getInstance().setLoadGameListener(this);
+        Repository.getInstance().readGame(id);
     }
 
 
