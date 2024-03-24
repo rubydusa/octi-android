@@ -24,7 +24,7 @@ public class LocalGameActivity extends AppCompatActivity {
     }
 
     public void drawBoard(Game game) {
-        // board.drawBoard(game);
+        board.drawBoard(game);
     }
 
     public void topLeftProngOnClick(View view) {

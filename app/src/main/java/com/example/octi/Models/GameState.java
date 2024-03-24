@@ -31,10 +31,10 @@ public class GameState implements Cloneable {
         pods.add(new Pod(Game.Team.GREEN, new Vector2D(2, 1)));
         pods.add(new Pod(Game.Team.GREEN, new Vector2D(3, 1)));
         pods.add(new Pod(Game.Team.GREEN, new Vector2D(4, 1)));
-        pods.add(new Pod(Game.Team.GREEN, new Vector2D(1, 5)));
-        pods.add(new Pod(Game.Team.GREEN, new Vector2D(2, 5)));
-        pods.add(new Pod(Game.Team.GREEN, new Vector2D(3, 5)));
-        pods.add(new Pod(Game.Team.GREEN, new Vector2D(4, 5)));
+        pods.add(new Pod(Game.Team.RED, new Vector2D(1, 5)));
+        pods.add(new Pod(Game.Team.RED, new Vector2D(2, 5)));
+        pods.add(new Pod(Game.Team.RED, new Vector2D(3, 5)));
+        pods.add(new Pod(Game.Team.RED, new Vector2D(4, 5)));
 
         coloredCells = new ArrayList<>();
         coloredCells.add(new ColoredCell(new Vector2D(1, 1), Game.Team.GREEN));

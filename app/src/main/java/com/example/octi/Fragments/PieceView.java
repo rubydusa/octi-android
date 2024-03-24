@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;
@@ -18,24 +19,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PieceView extends View{
-    private static final Map<Vector2D, Integer> vec2ArrowDrawable;
+    private static final int[] prong2prongDrawable = new int[8];
 
     static {
-        vec2ArrowDrawable = new HashMap<>();
-        vec2ArrowDrawable.put(new Vector2D(1, -1), R.drawable.octigon_arrow_top_right);
-        vec2ArrowDrawable.put(new Vector2D(0, -1), R.drawable.octigon_arrow_top_center);
-        vec2ArrowDrawable.put(new Vector2D(-1, -1), R.drawable.octigon_arrow_top_left);
-        vec2ArrowDrawable.put(new Vector2D(-1, 0), R.drawable.octigon_arrow_middle_left);
-        vec2ArrowDrawable.put(new Vector2D(-1, 1), R.drawable.octigon_arrow_bottom_left);
-        vec2ArrowDrawable.put(new Vector2D(0, 1), R.drawable.octigon_arrow_bottom_center);
-        vec2ArrowDrawable.put(new Vector2D(1, 1), R.drawable.octigon_arrow_bottom_right);
-        vec2ArrowDrawable.put(new Vector2D(1, 0), R.drawable.octigon_arrow_middle_right);
+        // 0 is middle right, going counter clockwise
+        prong2prongDrawable[0] = R.drawable.octigon_arrow_middle_right;
+        prong2prongDrawable[1] = R.drawable.octigon_arrow_top_right;
+        prong2prongDrawable[2] = R.drawable.octigon_arrow_top_center;
+        prong2prongDrawable[3] = R.drawable.octigon_arrow_top_left;
+        prong2prongDrawable[4] = R.drawable.octigon_arrow_middle_left;
+        prong2prongDrawable[5] = R.drawable.octigon_arrow_bottom_left;
+        prong2prongDrawable[6] = R.drawable.octigon_arrow_bottom_center;
+        prong2prongDrawable[7] = R.drawable.octigon_arrow_bottom_right;
     }
 
-    private Drawable octagonDrawable;
-    private Drawable octagonArrowDrawable;
+    private final Drawable octagonDrawable;
+    private final Drawable octagonArrowDrawable;
 
-    private Drawable octagonArrowFlippedDrawable;
+    private final Drawable octagonArrowFlippedDrawable;
     private Pod pod;
 
     private boolean selected = false;
@@ -52,7 +53,7 @@ public class PieceView extends View{
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawOctagon(canvas);
-        // drawArrows(canvas);
+        drawArrows(canvas);
     }
 
     private void drawOctagon(Canvas canvas) {
@@ -60,8 +61,10 @@ public class PieceView extends View{
         Drawable arrowDrawable = octagonArrowDrawable;
 
         if (team == Game.Team.RED) {
+            Log.d("PieceView", "drawOctagon: RED");
             octagonDrawable.setTint(getResources().getColor(R.color.team_red, getContext().getTheme()));
         } else {
+            Log.d("PieceView", "drawOctagon: GREEN");
             octagonDrawable.setTint(getResources().getColor(R.color.team_green, getContext().getTheme()));
             arrowDrawable = octagonArrowFlippedDrawable;
         }
@@ -81,22 +84,21 @@ public class PieceView extends View{
         arrowDrawable.draw(canvas);
     }
 
-    /*
-    private void drawArrows(Canvas canvas) {
-        List<Vector2D> arrows = octi.getArrows();
 
-        for (Vector2D arrow: arrows) {
-            Drawable arrowDrawable = ContextCompat.getDrawable(getContext(), vec2ArrowDrawable.get(arrow));
+    private void drawArrows(Canvas canvas) {
+        boolean[] prongs = pod.getProngs();
+
+        for (int i = 0; i < prongs.length; i++) {
+            Drawable arrowDrawable = ContextCompat.getDrawable(getContext(), prong2prongDrawable[i]);
             if (selected) {
                 arrowDrawable.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
             } else {
                 arrowDrawable.clearColorFilter();
             }
-            arrowDrawablene.setBounds(canvas.getClipBounds());
+            arrowDrawable.setBounds(canvas.getClipBounds());
             arrowDrawable.draw(canvas);
         }
     }
-    */
 
     public void setPod(Pod pod) {
         this.pod = pod;

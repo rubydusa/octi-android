@@ -13,10 +13,12 @@ public class Pod {
 
     public Game.Team getTeam() {
 
-        return Game.Team.RED;
+        return team;
     }
 
     public Vector2D getPosition() {
         return position;
     }
+
+    public boolean[] getProngs() { return prongs; }
 }

@@ -20,7 +20,7 @@ public class OnlineGameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_online_game);
 
         board = (BoardFragment) getSupportFragmentManager().findFragmentById(R.id.board_fragment);
-        presenter = new OnlineGamePresenter(this);
+        presenter = new OnlineGamePresenter(this, getIntent().getExtras().getString(getString(R.string.game_id)));
     }
 
     public void drawBoard(Game game) {
