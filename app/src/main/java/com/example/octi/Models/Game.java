@@ -2,6 +2,7 @@ package com.example.octi.Models;
 
 import java.util.Optional;
 
+// for now, user1 is always red
 public class Game {
     public enum Team {
         RED,
@@ -22,6 +23,9 @@ public class Game {
 
     private GameState currentGameState;
 
+    // if winner == null then tie
+    private Team winner;
+
     public Game() {}
 
     public Game(String gameId, User user1, User user2) {
@@ -39,6 +43,10 @@ public class Game {
         }
 
         currentGameState = nextGameState.get();
+
+        // temporary: end game after 1 move to showcase firebase working
+        setWinner(Team.RED);
+        setStatus(Status.FINISHED);
 
         return true;
     }
@@ -77,5 +85,13 @@ public class Game {
 
     public GameState getCurrentGameState() {
         return currentGameState;
+    }
+
+    public Team getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Team winner) {
+        this.winner = winner;
     }
 }

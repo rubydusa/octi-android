@@ -2,11 +2,13 @@ package com.example.octi.Game;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import com.example.octi.Fragments.BoardFragment;
+import com.example.octi.GameOver.GameOverActivity;
 import com.example.octi.Models.Game;
 import com.example.octi.R;
 
@@ -56,5 +58,12 @@ public class OnlineGameActivity extends AppCompatActivity {
 
     private void prongPlaceMove(int prong) {
         presenter.prongPlaceMove(prong);
+    }
+
+    public void navigateToGameOver(String gameId) {
+        Intent intent = new Intent(this, GameOverActivity.class);
+        intent.putExtra(getString(R.string.game_id), gameId);
+        startActivity(intent);
+        finish();
     }
 }

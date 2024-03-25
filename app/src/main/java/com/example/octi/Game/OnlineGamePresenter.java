@@ -26,6 +26,9 @@ public class OnlineGamePresenter implements Repository.LoadGameListener {
 
     @Override
     public void updateGame(Game game) {
+        if (game.getStatus() == Game.Status.FINISHED) {
+            view.navigateToGameOver(game.getGameId());
+        }
         this.game = game;
         board.drawBoard(game);
     }
