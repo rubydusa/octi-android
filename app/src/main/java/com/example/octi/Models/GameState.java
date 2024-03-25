@@ -61,14 +61,12 @@ public class GameState implements Cloneable {
             // no prongs
             int prongCount = nextState.getProngCount(turn);
             if (prongCount == 0) {
-                Log.d("ASAD", "makeMove: not enough prongs");
                 return Optional.empty();
             }
 
             // no target pod
             Pod targetPod = nextState.findPod(move.getTarget());
             if (targetPod == null) {
-                Log.d("ASAD", "makeMove: no target pod");
                 return Optional.empty();
             }
 
@@ -77,7 +75,6 @@ public class GameState implements Cloneable {
 
             // prong already exists
             if (targetPod.getProngs().get(prong)) {
-                Log.d("ASAD", "makeMove: prong Already exists");
                 return Optional.empty();
             }
 
@@ -111,11 +108,6 @@ public class GameState implements Cloneable {
     private Pod findPod(Vector2D position) {
         for (Pod pod:
              pods) {
-            Log.d("ASAD",
-                    "pod pos: " +
-                            pod.getPosition().toString() +
-                            "target pos: " + position.toString()
-            );
             if (pod.getPosition().equals(position)) {
                 return pod;
             }

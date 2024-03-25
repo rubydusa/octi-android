@@ -23,42 +23,34 @@ public class OnlineGameActivity extends AppCompatActivity {
     }
 
     public void middleRightProngOnClick(View view) {
-        Log.d("ASAD", "middleRightProngOnClick: 0");
         prongPlaceMove(0);
     }
 
     public void topRightProngOnClick(View view) {
-        Log.d("ASAD", "middleRightProngOnClick: 1");
         prongPlaceMove(1);
     }
 
     public void topCenterProngOnClick(View view) {
-        Log.d("ASAD", "middleRightProngOnClick: 2");
         prongPlaceMove(2);
     }
 
     public void topLeftProngOnClick(View view) {
-        Log.d("ASAD", "middleRightProngOnClick: 3");
         prongPlaceMove(3);
     }
 
     public void middleLeftProngOnClick(View view) {
-        Log.d("ASAD", "middleRightProngOnClick: 4");
         prongPlaceMove(4);
     }
 
     public void bottomLeftProngOnClick(View view) {
-        Log.d("ASAD", "middleRightProngOnClick: 5");
         prongPlaceMove(5);
     }
 
     public void bottomCenterProngOnClick(View view) {
-        Log.d("ASAD", "middleRightProngOnClick: 6");
         prongPlaceMove(6);
     }
 
     public void bottomRightProngOnClick(View view) {
-        Log.d("ASAD", "middleRightProngOnClick: 7");
         prongPlaceMove(7);
     }
 

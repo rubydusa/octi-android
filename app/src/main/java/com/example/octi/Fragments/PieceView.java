@@ -62,10 +62,8 @@ public class PieceView extends View{
         Drawable arrowDrawable = octagonArrowDrawable;
 
         if (team == Game.Team.RED) {
-            Log.d("PieceView", "drawOctagon: RED");
             octagonDrawable.setTint(getResources().getColor(R.color.team_red, getContext().getTheme()));
         } else {
-            Log.d("PieceView", "drawOctagon: GREEN");
             octagonDrawable.setTint(getResources().getColor(R.color.team_green, getContext().getTheme()));
             arrowDrawable = octagonArrowFlippedDrawable;
         }
