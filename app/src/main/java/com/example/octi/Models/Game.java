@@ -10,6 +10,7 @@ public class Game {
     }
 
     public enum Status {
+        NULL,
         PENDING,
         ACTIVE,
         FINISHED
@@ -32,6 +33,7 @@ public class Game {
         this.gameId = gameId;
         this.user1 = user1;
         this.user2 = user2;
+        this.status = Status.PENDING;
 
         currentGameState = new GameState();
     }

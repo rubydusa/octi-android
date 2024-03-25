@@ -103,13 +103,17 @@ public class Repository {
         });
     }
 
-    public void gameExists(String id, final Callback<Boolean> callback) {
+    public void gameExists(String id, final Callback<Game.Status> callback) {
         FirebaseDatabase database = FirebaseDatabase.getInstance(URL);
         DatabaseReference gamesRef = database.getReference("Games");
         gamesRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                callback.onComplete(dataSnapshot.exists());
+                if (dataSnapshot.exists()) {
+                    callback.onComplete(dataSnapshot.getValue(Game.class).getStatus());
+                } else {
+                    callback.onComplete(Game.Status.NULL);
+                }
             }
 
             @Override
@@ -123,13 +127,13 @@ public class Repository {
 
     private void generateRoomCode(final Callback<String> callback) {
         String potentialCode = RoomCodeGenerator.generateCode();
-        gameExists(potentialCode, codeExists -> {
-            if (codeExists == null) {
+        gameExists(potentialCode, status -> {
+            if (status == null) {
                 callback.onComplete(null);
                 return;
             }
 
-            if (codeExists) {
+            if (status != Game.Status.NULL) {
                 generateRoomCode(callback);
             } else {
                 callback.onComplete(potentialCode);

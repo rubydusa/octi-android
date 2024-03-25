@@ -25,11 +25,13 @@ public class HomePresenter {
     }
 
     public void onJoinRoom(String roomCode) {
-        Repository.getInstance().gameExists(roomCode, gameExists -> {
-            if (gameExists == null) {
+        Repository.getInstance().gameExists(roomCode, status -> {
+            if (status == null) {
                 Toast.makeText(view, "Error joining game. Try again", Toast.LENGTH_SHORT).show();
-            } else if (!gameExists) {
+            } else if (status == Game.Status.NULL) {
                 Toast.makeText(view, "Room code does not exist", Toast.LENGTH_SHORT).show();
+            } else if (status == Game.Status.FINISHED) {
+                Toast.makeText(view, "Game finished", Toast.LENGTH_SHORT).show();
             } else {
                 view.navigateToCreateRoom(roomCode);
             }
