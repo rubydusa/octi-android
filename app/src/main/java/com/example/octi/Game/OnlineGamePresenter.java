@@ -31,6 +31,7 @@ public class OnlineGamePresenter implements Repository.LoadGameListener {
         }
         this.game = game;
         board.drawBoard(game);
+        view.displayGameInfo(game);
     }
 
     public void prongPlaceMove(int prong) {

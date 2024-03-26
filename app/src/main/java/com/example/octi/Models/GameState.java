@@ -96,6 +96,10 @@ public class GameState implements Cloneable {
         return pods;
     }
 
+    public Game.Team getTurn() {
+        return turn;
+    }
+
     public int getProngCount(Game.Team team) {
         if (team == Game.Team.RED) {
             return redProngCount;
