@@ -88,6 +88,8 @@ public class GameState implements Cloneable {
         return Optional.empty();
     }
 
+    // public ArrayList<Vector2D> possibleNext
+
     public List<ColoredCell> getColoredCells() {
         return coloredCells;
     }
@@ -108,8 +110,12 @@ public class GameState implements Cloneable {
         }
     }
 
+    public Pod findPod(int x, int y) {
+        return findPod(new Vector2D(x, y));
+    }
+
     @Nullable
-    private Pod findPod(Vector2D position) {
+    public Pod findPod(Vector2D position) {
         for (Pod pod:
              pods) {
             if (pod.getPosition().equals(position)) {

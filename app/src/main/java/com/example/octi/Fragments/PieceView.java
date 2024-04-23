@@ -57,6 +57,10 @@ public class PieceView extends View{
         drawArrows(canvas);
     }
 
+    public Pod getPod() {
+        return pod;
+    }
+
     private void drawOctagon(Canvas canvas) {
         Game.Team team = pod.getTeam();
         Drawable arrowDrawable = octagonArrowDrawable;

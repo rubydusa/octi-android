@@ -34,6 +34,8 @@ public class BoardFragment extends Fragment {
 
     private Cell selectedCell;
 
+    private Game lastRenderedGame;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class BoardFragment extends Fragment {
     }
 
     public void drawBoard(Game game) {
+        lastRenderedGame = game;
         colorCells(game.getCurrentGameState().getColoredCells());
         drawPieces(game.getCurrentGameState().getPods());
     }
@@ -165,7 +168,14 @@ public class BoardFragment extends Fragment {
         }
 
         public void setSelection(boolean state) {
-            if (piece != null) {
+            if (piece == null) {
+                return;
+            }
+
+            Game.Team currentTeam = lastRenderedGame.getCurrentGameState().getTurn();
+            Game.Team selectedPieceTeam = piece.getPod().getTeam();
+
+            if (currentTeam == selectedPieceTeam) {
                 selected = state;
                 piece.setSelection(selected);
             }
