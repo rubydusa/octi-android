@@ -5,13 +5,16 @@ import android.widget.Toast;
 
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Models.Game;
+import com.example.octi.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class HomePresenter {
+public class HomePresenter implements Repository.LoadUserListener {
     HomeActivity view;
 
     public HomePresenter(HomeActivity view) {
+
         this.view = view;
+        Repository.getInstance().setLoadUserListener(this);
     }
 
     public void onClickCreateRoom() {
@@ -36,5 +39,13 @@ public class HomePresenter {
                 view.navigateToCreateRoom(roomCode);
             }
         });
+    }
+
+    // check if user is expired
+    @Override
+    public void updateUser(User user) {
+        if (user == null) {
+            view.forceLogOut();
+        }
     }
 }

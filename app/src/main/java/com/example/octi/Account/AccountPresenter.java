@@ -7,6 +7,8 @@ import com.example.octi.Firebase.Repository;
 import com.example.octi.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 
+import kotlin.Pair;
+
 public class AccountPresenter implements Repository.LoadUserListener {
     FirebaseAuth mAuth;
     AccountActivity view;

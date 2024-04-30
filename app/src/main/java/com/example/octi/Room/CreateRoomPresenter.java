@@ -1,5 +1,7 @@
 package com.example.octi.Room;
 
+import android.util.Log;
+
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.User;
@@ -35,6 +37,11 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
 
     @Override
     public void updateUser(User user) {
+        if (user == null) {
+            // user might be signed out
+            // TODO
+        }
+
         if (game.getUser1() == null) {
             game.setUser1(user);
             Repository.getInstance().updateGame(game);

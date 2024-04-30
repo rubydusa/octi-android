@@ -32,9 +32,9 @@ public class BoardFragment extends Fragment {
 
     private final Cell[][] cells = new Cell[ROWS][COLUMNS];
 
-    private Cell selectedCell;
-
     private Game lastRenderedGame;
+
+    private CellClickListener cellClickListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,7 +51,8 @@ public class BoardFragment extends Fragment {
                         gridLayout,
                         i,
                         j,
-                        null
+                        null,
+                        false
                 );
 
 
@@ -62,14 +63,15 @@ public class BoardFragment extends Fragment {
         return view;
     }
 
+    public void setCellClickListener(CellClickListener cellClickListener) {
+        this.cellClickListener = cellClickListener;
+    }
+
     public void drawBoard(Game game) {
         lastRenderedGame = game;
         colorCells(game.getCurrentGameState().getColoredCells());
         drawPieces(game.getCurrentGameState().getPods());
-    }
-
-    public Cell getSelectedCell() {
-        return selectedCell;
+        processSelectedPiece(game.getCurrentGameState().getSelectedPod());
     }
 
     private void colorCells(List<ColoredCell> colors) {
@@ -89,22 +91,24 @@ public class BoardFragment extends Fragment {
         }
     }
 
+    public void processSelectedPiece(Pod piece) {
+        if (piece == null) {
+            return;
+        }
+        Vector2D pod = piece.getPosition();
+        int x = pod.getX();
+        int y = pod.getY();
+        cells[y][x].setSelection(true);
+    }
+
     private void onCellClicked(Cell cell) {
-        if (selectedCell == null) {
-            cell.setSelection(true);
-            selectedCell = cell;
-        } else if (cell == selectedCell) {
-            cell.setSelection(false);
-            selectedCell = null;
-        } else {
-            selectedCell.setSelection(false);
-            cell.setSelection(true);
-            selectedCell = cell;
+        if (cellClickListener != null) {
+            cellClickListener.onCellClicked(cell);
         }
     }
 
     public class Cell {
-        private boolean selected = false;
+        private boolean selected;
 
         private final FrameLayout frame;
 
@@ -119,7 +123,8 @@ public class BoardFragment extends Fragment {
                 GridLayout gridLayout,
                 int x,
                 int y,
-                @Nullable Game.Team color
+                @Nullable Game.Team color,
+                boolean selected
         ) {
             this.x = x;
             this.y = y;
@@ -144,6 +149,15 @@ public class BoardFragment extends Fragment {
             params.columnSpec = GridLayout.spec(y, 1f);
             params.rowSpec = GridLayout.spec(x, 1f);
             gridLayout.addView(frame, params);
+
+            this.selected = selected;
+        }
+
+        public Pod getPod() {
+            if (piece != null) {
+                return piece.getPod();
+            }
+            return null;
         }
 
         public void setCellColor(@Nullable Game.Team color) {
@@ -169,24 +183,12 @@ public class BoardFragment extends Fragment {
 
         public void setSelection(boolean state) {
             if (piece == null) {
+                // color cell bright green
                 return;
             }
 
-            Game.Team currentTeam = lastRenderedGame.getCurrentGameState().getTurn();
-            Game.Team selectedPieceTeam = piece.getPod().getTeam();
-
-            if (currentTeam == selectedPieceTeam) {
-                selected = state;
-                piece.setSelection(selected);
-            }
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
+            selected = state;
+            piece.setSelection(selected);
         }
 
         private int getCellColorResource(@Nullable Game.Team color) {
@@ -204,5 +206,9 @@ public class BoardFragment extends Fragment {
             // TODO: Clarify in code this is unreachable
             return 0;
         }
+    }
+
+    public interface CellClickListener {
+        void onCellClicked(Cell cell);
     }
 }

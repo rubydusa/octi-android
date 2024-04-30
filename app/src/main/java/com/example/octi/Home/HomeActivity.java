@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.example.octi.Entry.EntryActivity;
 import com.example.octi.Game.LocalGameActivity;
 import com.example.octi.Account.AccountActivity;
 import com.example.octi.R;
 import com.example.octi.Room.CreateRoomActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity implements GameOptionsDialog.GameOptionsListener {
     HomePresenter presenter;
@@ -53,5 +55,12 @@ public class HomeActivity extends AppCompatActivity implements GameOptionsDialog
     @Override
     public void onJoinRoomSelected(String roomCode) {
         presenter.onJoinRoom(roomCode);
+    }
+
+    public void forceLogOut() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(this, EntryActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

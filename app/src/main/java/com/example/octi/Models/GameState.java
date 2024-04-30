@@ -1,19 +1,13 @@
 package com.example.octi.Models;
 
-import android.graphics.Path;
-import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
-
-import kotlin.Pair;
 
 public class GameState implements Cloneable {
     private Game.Team turn;
@@ -22,6 +16,26 @@ public class GameState implements Cloneable {
     private int greenProngCount;
     private ArrayList<Pod> pods;
     private ArrayList<ColoredCell> coloredCells;
+
+    private boolean inMove = false;
+    // while constructing move, keep track of pods jumped over because it's not
+    // allowed to jump a pod twice in a turn
+    private ArrayList<Action> inMoveActions = new ArrayList<>();
+    private Pod selectedPod = null;
+    private ArrayList<Vector2D> jumpedPods = new ArrayList<>();
+    private static final ArrayList<Vector2D> prong2Direciton;
+
+    static {
+        prong2Direciton = new ArrayList<>(8);
+        prong2Direciton.add(new Vector2D(1, 0));
+        prong2Direciton.add(new Vector2D(1, -1));
+        prong2Direciton.add(new Vector2D(0, -1));
+        prong2Direciton.add(new Vector2D(-1, -1));
+        prong2Direciton.add(new Vector2D(-1, 0));
+        prong2Direciton.add(new Vector2D(-1, 1));
+        prong2Direciton.add(new Vector2D(0, 1));
+        prong2Direciton.add(new Vector2D(1, 1));
+    }
 
     // default state
     public GameState() {
@@ -82,6 +96,7 @@ public class GameState implements Cloneable {
             nextState.useProng(turn);
             nextState.nextTurn();
 
+            nextState.cleanUp();
             return Optional.of(nextState);
         }
 
@@ -108,6 +123,64 @@ public class GameState implements Cloneable {
         } else {
             return greenProngCount;
         }
+    }
+
+    // throws if selected pod not exists or invalid
+    public void selectPod(int x, int y) {
+        selectPod(new Vector2D(x, y));
+    }
+
+    public void selectPod(Vector2D position) {
+        Pod pod = findPod(position);
+        if (pod == null) {
+            throw new RuntimeException("could not select pod");
+        }
+
+        if (pod.getTeam() != turn) {
+            throw  new RuntimeException("selected pod of incorrect team");
+        }
+        selectedPod = pod;
+    }
+
+    public void deselectPod() {
+        selectedPod = null;
+    }
+
+    // integer - prong identifier
+    // Vector2D - position it ends up on
+    public ArrayList<Pair<Integer, Vector2D>> nextPossibleMoves() {
+        Pod pod = selectedPod;
+        if (pod == null) {
+            throw new RuntimeException("Pod not selected");
+        }
+
+        ArrayList<Pair<Integer, Vector2D>> result = new ArrayList<>();
+
+        ArrayList<Boolean> prongs = pod.getProngs();
+        for (int i = 0; i < 8; i++) {
+            boolean isProng = prongs.get(i);
+            if (!isProng) {
+                continue;
+            }
+
+            Vector2D direction = prong2Direciton.get(i);
+            Vector2D next1 = pod.getPosition().add(direction);
+            Vector2D next2 = next1.add(direction);
+
+            // jump option
+            if (findPod(next1) != null && findPod(next2) == null) {
+                result.add(new Pair<>(i, next2));
+            }
+
+            // simple move option
+            if (!inMove) {
+                if (findPod(next1) == null) {
+                    result.add(new Pair<>(i, next1));
+                }
+            }
+        }
+
+        return result;
     }
 
     public Pod findPod(int x, int y) {
@@ -142,6 +215,13 @@ public class GameState implements Cloneable {
         }
     }
 
+    private void cleanUp() {
+        inMove = false;
+        inMoveActions.clear();
+        deselectPod();
+        jumpedPods.clear();
+    }
+
     @NonNull
     @Override
     public GameState clone() {
@@ -154,4 +234,9 @@ public class GameState implements Cloneable {
             throw new AssertionError();
         }
     }
+
+    public Pod getSelectedPod() {
+        return selectedPod;
+    }
+
 }
