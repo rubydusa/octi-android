@@ -9,7 +9,7 @@ import com.example.octi.Models.Move;
 import com.example.octi.Models.Pod;
 import com.example.octi.Models.Vector2D;
 
-public class OnlineGamePresenter implements Repository.LoadGameListener {
+public class OnlineGamePresenter implements Repository.LoadGameListener, BoardFragment.CellClickListener {
     OnlineGameActivity view;
     BoardFragment board;
     String id;
@@ -20,6 +20,7 @@ public class OnlineGamePresenter implements Repository.LoadGameListener {
         this.id = id;
         this.board = board;
 
+        board.setCellClickListener(this);
         Repository.getInstance().setLoadGameListener(this);
         Repository.getInstance().readGame(id);
     }
@@ -49,5 +50,21 @@ public class OnlineGamePresenter implements Repository.LoadGameListener {
         } else {
             // notify player of problematic move
         }
+    }
+
+    @Override
+    public void onCellClicked(BoardFragment.Cell cell) {
+        Pod clickedPod = cell.getPod();
+        Pod previouslySelectedPod = game.getCurrentGameState().getSelectedPod();
+        game.getCurrentGameState().deselectPod();
+
+        if (clickedPod != null &&
+                clickedPod != previouslySelectedPod &&
+                clickedPod.getTeam() == game.getCurrentGameState().getTurn()
+        ) {
+            game.getCurrentGameState().selectPod(clickedPod.getPosition());
+        }
+
+        Repository.getInstance().updateGame(game);
     }
 }

@@ -1,11 +1,14 @@
 package com.example.octi.Fragments;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +24,8 @@ import com.example.octi.R;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.Pod;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import kotlin.Pair;
 
 public class BoardFragment extends Fragment {
 
@@ -51,8 +53,7 @@ public class BoardFragment extends Fragment {
                         gridLayout,
                         i,
                         j,
-                        null,
-                        false
+                        null
                 );
 
 
@@ -69,9 +70,18 @@ public class BoardFragment extends Fragment {
 
     public void drawBoard(Game game) {
         lastRenderedGame = game;
+        clearPreviouslySelectedCells();
         colorCells(game.getCurrentGameState().getColoredCells());
         drawPieces(game.getCurrentGameState().getPods());
         processSelectedPiece(game.getCurrentGameState().getSelectedPod());
+    }
+
+    private void clearPreviouslySelectedCells() {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                cells[i][j].setSelection(false);
+            }
+        }
     }
 
     private void colorCells(List<ColoredCell> colors) {
@@ -99,6 +109,11 @@ public class BoardFragment extends Fragment {
         int x = pod.getX();
         int y = pod.getY();
         cells[y][x].setSelection(true);
+
+        ArrayList<Pair<Integer, Vector2D>> possibleNextMoves = lastRenderedGame.getCurrentGameState().nextPossibleMoves();
+        for (Pair<Integer, Vector2D> nextMove : possibleNextMoves) {
+            cells[nextMove.second.getY()][nextMove.second.getX()].setSelection(true);
+        }
     }
 
     private void onCellClicked(Cell cell) {
@@ -108,7 +123,7 @@ public class BoardFragment extends Fragment {
     }
 
     public class Cell {
-        private boolean selected;
+        private boolean selected = false;
 
         private final FrameLayout frame;
 
@@ -123,8 +138,7 @@ public class BoardFragment extends Fragment {
                 GridLayout gridLayout,
                 int x,
                 int y,
-                @Nullable Game.Team color,
-                boolean selected
+                @Nullable Game.Team color
         ) {
             this.x = x;
             this.y = y;
@@ -149,8 +163,6 @@ public class BoardFragment extends Fragment {
             params.columnSpec = GridLayout.spec(y, 1f);
             params.rowSpec = GridLayout.spec(x, 1f);
             gridLayout.addView(frame, params);
-
-            this.selected = selected;
         }
 
         public Pod getPod() {
@@ -182,13 +194,23 @@ public class BoardFragment extends Fragment {
         }
 
         public void setSelection(boolean state) {
-            if (piece == null) {
-                // color cell bright green
+            // optimize rendering, clearing all cells each time is heavy
+            if (selected == state) {
                 return;
             }
-
             selected = state;
-            piece.setSelection(selected);
+            if (piece == null) {
+                if (selected) {
+                    frame.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+                    frame.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    frame.getBackground().clearColorFilter();
+                    frame.getBackground().clearColorFilter();
+                }
+                return;
+            } else {
+                piece.setSelection(selected);
+            }
         }
 
         private int getCellColorResource(@Nullable Game.Team color) {
