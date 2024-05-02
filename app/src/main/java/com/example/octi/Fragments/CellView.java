@@ -130,10 +130,8 @@ public class CellView extends View{
 
         if (selected) {
             octagonDrawable.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
-            arrowDrawable.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
         } else {
             octagonDrawable.clearColorFilter();
-            arrowDrawable.clearColorFilter();
         }
 
         octagonOutlineDrawable.draw(canvas);
@@ -150,11 +148,6 @@ public class CellView extends View{
                 continue;
             }
             Drawable arrowDrawable = ContextCompat.getDrawable(getContext(), prong2prongDrawable[i]);
-            if (selected) {
-                arrowDrawable.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
-            } else {
-                arrowDrawable.clearColorFilter();
-            }
             arrowDrawable.setBounds(canvas.getClipBounds());
             arrowDrawable.draw(canvas);
         }
