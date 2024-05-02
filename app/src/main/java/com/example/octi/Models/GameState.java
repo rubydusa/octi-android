@@ -68,6 +68,8 @@ public class GameState implements Cloneable {
     // assumes move structure cannot be wrong, but move may be invalid.
     // so a move targeting an incorrect position is accepted, but a place move
     // without an action argument throws
+    // TODO: Seems that I will not be creating a processor that processes move actions all at onces
+    // so need to rewrite
     public Optional<GameState> makeMove(Move move) {
         GameState nextState = this.clone();
 
@@ -102,8 +104,6 @@ public class GameState implements Cloneable {
 
         return Optional.empty();
     }
-
-    // public ArrayList<Vector2D> possibleNext
 
     public List<ColoredCell> getColoredCells() {
         return coloredCells;
@@ -183,8 +183,41 @@ public class GameState implements Cloneable {
         return result;
     }
 
-    public Pod findPod(int x, int y) {
-        return findPod(new Vector2D(x, y));
+    public void advanceSelectedPod(Vector2D to) {
+        Pod pod = selectedPod;
+        if (pod == null) {
+            throw new RuntimeException("no selected pod to advance");
+        }
+
+        int prong = inferProngFromChange(pod.getPosition(), to);
+
+        boolean hasProng = pod.getProngs().get(prong);
+        if (!hasProng) {
+            throw new RuntimeException("selected pod doesn't have prong");
+        }
+
+        Vector2D direction = prong2Direciton.get(prong);
+        Vector2D next1 = pod.getPosition().add(direction);
+        Vector2D next2 = next1.add(direction);
+
+        inMove = true;
+
+        // jump option
+        if (findPod(next1) != null && findPod(next2) == null) {
+            jumpedPods.add(next1);
+            selectedPod.setPosition(next2);
+            if (nextPossibleMoves().isEmpty()) {
+                nextTurn();
+                cleanUp();
+            }
+        }
+
+        // simple move option
+        if (findPod(next1) == null) {
+            selectedPod.setPosition(next1);
+            nextTurn();
+            cleanUp();
+        }
     }
 
     @Nullable
@@ -197,6 +230,20 @@ public class GameState implements Cloneable {
         }
 
         return null;
+    }
+
+    private int inferProngFromChange(Vector2D base, Vector2D to) {
+        for (int i = 0; i < 8; i++) {
+            Vector2D direction = prong2Direciton.get(i);
+            Vector2D next1 = base.add(direction);
+            Vector2D next2 = next1.add(direction);
+
+            if (to.equals(next1) || to.equals(next2)) {
+                return i;
+            }
+        }
+
+        throw new RuntimeException("no valid prong inferred");
     }
 
     private void useProng(Game.Team team) {

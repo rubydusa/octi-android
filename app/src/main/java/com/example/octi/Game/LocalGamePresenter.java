@@ -49,6 +49,14 @@ public class LocalGamePresenter implements BoardFragment.CellClickListener {
                 clickedPod.getTeam() == game.getCurrentGameState().getTurn()
         ) {
             game.getCurrentGameState().selectPod(clickedPod.getPosition());
+        } else if (
+                clickedPod == null &&
+                        previouslySelectedPod != null &&
+                cell.isSelected()
+        ) {
+            // game.getCurrentGameState()
+            game.getCurrentGameState().selectPod(previouslySelectedPod.getPosition());
+            game.getCurrentGameState().advanceSelectedPod(cell.getPosition());
         }
 
         view.drawBoard(game);

@@ -111,10 +111,13 @@ public class PieceView extends View{
 
     public void setPod(Pod pod) {
         this.pod = pod;
+        // cause to rerender
+        invalidate();
     }
 
     public void setSelection(boolean state) {
         selected = state;
+        // cause to rerender
         invalidate();
     }
 }

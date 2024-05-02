@@ -51,8 +51,8 @@ public class BoardFragment extends Fragment {
             for (int j = 0; j < COLUMNS; j++) {
                 Cell cell = new Cell(
                         gridLayout,
-                        i,
                         j,
+                        i,
                         null
                 );
 
@@ -80,6 +80,7 @@ public class BoardFragment extends Fragment {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
                 cells[i][j].setSelection(false);
+                cells[i][j].clearCell();
             }
         }
     }
@@ -163,8 +164,8 @@ public class BoardFragment extends Fragment {
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = 0;
             params.height = 0;
-            params.columnSpec = GridLayout.spec(y, 1f);
-            params.rowSpec = GridLayout.spec(x, 1f);
+            params.columnSpec = GridLayout.spec(x, 1f);
+            params.rowSpec = GridLayout.spec(y, 1f);
             gridLayout.addView(frame, params);
         }
 
@@ -188,6 +189,10 @@ public class BoardFragment extends Fragment {
             } else if (backgroundDrawable instanceof GradientDrawable) {
                 ((GradientDrawable) backgroundDrawable).setColor(colorResource);
             }
+        }
+
+        public void clearCell() {
+            piece.setPod(null);
         }
 
         public void setPiece(Pod pod) {
@@ -227,6 +232,14 @@ public class BoardFragment extends Fragment {
 
             // TODO: Clarify in code this is unreachable
             return 0;
+        }
+
+        public boolean isSelected() {
+            return selected;
+        }
+
+        public Vector2D getPosition() {
+            return new Vector2D(x, y);
         }
     }
 

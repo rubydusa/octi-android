@@ -32,4 +32,8 @@ public class Pod {
     }
 
     public ArrayList<Boolean> getProngs() { return prongs; }
+
+    public void setPosition(Vector2D position) {
+        this.position = position;
+    }
 }
