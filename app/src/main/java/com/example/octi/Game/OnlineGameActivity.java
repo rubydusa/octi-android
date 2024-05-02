@@ -58,7 +58,7 @@ public class OnlineGameActivity extends AppCompatActivity {
     }
 
     private void prongPlaceMove(int prong) {
-        presenter.prongPlaceMove(prong);
+        // presenter.prongPlaceMove(prong);
     }
 
     public void navigateToGameOver(String gameId) {

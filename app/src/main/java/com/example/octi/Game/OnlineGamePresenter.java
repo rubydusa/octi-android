@@ -1,15 +1,12 @@
 package com.example.octi.Game;
 
-import android.util.Log;
-
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Fragments.BoardFragment;
 import com.example.octi.Models.Game;
-import com.example.octi.Models.Move;
 import com.example.octi.Models.Pod;
 import com.example.octi.Models.Vector2D;
 
-public class OnlineGamePresenter implements Repository.LoadGameListener, BoardFragment.CellClickListener {
+public class OnlineGamePresenter implements Repository.LoadGameListener {
     OnlineGameActivity view;
     BoardFragment board;
     String id;
@@ -20,7 +17,7 @@ public class OnlineGamePresenter implements Repository.LoadGameListener, BoardFr
         this.id = id;
         this.board = board;
 
-        board.setCellClickListener(this);
+        // board.setCellClickListener(this);
         Repository.getInstance().setLoadGameListener(this);
         Repository.getInstance().readGame(id);
     }
@@ -36,6 +33,7 @@ public class OnlineGamePresenter implements Repository.LoadGameListener, BoardFr
         view.displayGameInfo(game);
     }
 
+    /*
     public void prongPlaceMove(int prong) {
         Pod selectedPod = game.getCurrentGameState().getSelectedPod();
         if (selectedPod == null) {
@@ -67,4 +65,5 @@ public class OnlineGamePresenter implements Repository.LoadGameListener, BoardFr
 
         Repository.getInstance().updateGame(game);
     }
+    */
 }

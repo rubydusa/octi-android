@@ -1,13 +1,10 @@
 package com.example.octi.Models;
 
-import android.util.Pair;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class GameState implements Cloneable {
     private Game.Team turn;
@@ -18,11 +15,8 @@ public class GameState implements Cloneable {
     private ArrayList<ColoredCell> coloredCells;
 
     private boolean inMove = false;
-    // while constructing move, keep track of pods jumped over because it's not
-    // allowed to jump a pod twice in a turn
-    private ArrayList<Action> inMoveActions = new ArrayList<>();
     private Pod selectedPod = null;
-    private ArrayList<Vector2D> jumpedPods = new ArrayList<>();
+    private ArrayList<Jump> inMoveJumps = new ArrayList<>();
     private static final ArrayList<Vector2D> prong2Direciton;
 
     static {
@@ -65,46 +59,6 @@ public class GameState implements Cloneable {
         coloredCells.add(new ColoredCell(new Vector2D(4, 5), Game.Team.RED));
     }
 
-    // assumes move structure cannot be wrong, but move may be invalid.
-    // so a move targeting an incorrect position is accepted, but a place move
-    // without an action argument throws
-    // TODO: Seems that I will not be creating a processor that processes move actions all at onces
-    // so need to rewrite
-    public Optional<GameState> makeMove(Move move) {
-        GameState nextState = this.clone();
-
-        if (move.getMoveType() == Move.MoveType.PLACE) {
-            // no prongs
-            int prongCount = nextState.getProngCount(turn);
-            if (prongCount == 0) {
-                return Optional.empty();
-            }
-
-            // no target pod
-            Pod targetPod = nextState.findPod(move.getTarget());
-            if (targetPod == null) {
-                return Optional.empty();
-            }
-
-            Action placeAction = move.getActions().get(0);
-            int prong = placeAction.getValue();
-
-            // prong already exists
-            if (targetPod.getProngs().get(prong)) {
-                return Optional.empty();
-            }
-
-            targetPod.getProngs().set(prong, true);
-            nextState.useProng(turn);
-            nextState.nextTurn();
-
-            nextState.cleanUp();
-            return Optional.of(nextState);
-        }
-
-        return Optional.empty();
-    }
-
     public List<ColoredCell> getColoredCells() {
         return coloredCells;
     }
@@ -123,24 +77,6 @@ public class GameState implements Cloneable {
         } else {
             return greenProngCount;
         }
-    }
-
-    public ArrayList<Pair<Boolean, Vector2D>> getJumpedPods() {
-        if (inMoveActions.size() != jumpedPods.size()) {
-            throw new RuntimeException("inMoveActions and jumpedPods should be of same length");
-        }
-
-        ArrayList<Pair<Boolean, Vector2D>> result = new ArrayList<>();
-        for (int i = 0; i < inMoveActions.size(); i++) {
-            Pair<Boolean, Vector2D> jumpedPair = new Pair<>(
-                    inMoveActions.get(i).getEat(),
-                    jumpedPods.get(i)
-            );
-
-            result.add(jumpedPair);
-        }
-
-        return result;
     }
 
     public void selectPod(Vector2D position) {
@@ -215,8 +151,7 @@ public class GameState implements Cloneable {
 
         // jump option
         if (findPod(next1) != null && findPod(next2) == null) {
-            jumpedPods.add(next1);
-            inMoveActions.add(new Action(prong, false));
+            inMoveJumps.add(new Jump(false, next2));
             selectedPod.setPosition(next2);
         }
 
@@ -226,6 +161,31 @@ public class GameState implements Cloneable {
             nextTurn();
             cleanUp();
         }
+    }
+
+    // caller needs to catch
+    public void placeProng(Vector2D target, int prong) throws RuntimeException {
+        int prongCount = getProngCount(turn);
+        if (prongCount <= 0) {
+            throw new RuntimeException("no prongs to place");
+        }
+
+        // no target pod
+        Pod targetPod = findPod(target);
+        if (targetPod == null) {
+            throw new RuntimeException("can't place prong cause pod does not exist");
+        }
+
+        // prong already exists
+        if (targetPod.getProngs().get(prong)) {
+            throw new RuntimeException("prong already exists");
+        }
+
+        targetPod.getProngs().set(prong, true);
+        useProng(turn);
+        nextTurn();
+
+        cleanUp();
     }
 
     @Nullable
@@ -238,6 +198,33 @@ public class GameState implements Cloneable {
         }
 
         return null;
+    }
+
+    @NonNull
+    @Override
+    public GameState clone() {
+        try {
+            GameState clone = (GameState) super.clone();
+            clone.pods = (ArrayList<Pod>) pods.clone();
+
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    public Pod getSelectedPod() {
+        return selectedPod;
+    }
+
+    public boolean isInMove() {
+        return inMove;
+    }
+
+    public void finalizeState() {
+        // remove eaten pods
+        nextTurn();
+        cleanUp();
     }
 
     private int inferProngFromChange(Vector2D base, Vector2D to) {
@@ -272,35 +259,11 @@ public class GameState implements Cloneable {
 
     private void cleanUp() {
         inMove = false;
-        inMoveActions.clear();
         deselectPod();
-        jumpedPods.clear();
+        inMoveJumps.clear();
     }
 
-    @NonNull
-    @Override
-    public GameState clone() {
-        try {
-            GameState clone = (GameState) super.clone();
-            clone.pods = (ArrayList<Pod>) pods.clone();
-
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
-
-    public Pod getSelectedPod() {
-        return selectedPod;
-    }
-
-    public boolean isInMove() {
-        return inMove;
-    }
-
-    public void finalizeState() {
-        // remove eaten pods
-        nextTurn();
-        cleanUp();
+    public ArrayList<Jump> getInMoveJumps() {
+        return inMoveJumps;
     }
 }

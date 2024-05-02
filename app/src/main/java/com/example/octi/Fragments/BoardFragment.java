@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.octi.Models.ColoredCell;
+import com.example.octi.Models.Jump;
 import com.example.octi.Models.Vector2D;
 import com.example.octi.R;
 import com.example.octi.Models.Game;
@@ -73,7 +74,7 @@ public class BoardFragment extends Fragment {
         clearPreviouslySelectedCells();
         colorCells(game.getCurrentGameState().getColoredCells());
         drawPieces(game.getCurrentGameState().getPods());
-        showJumpedOver(game.getCurrentGameState().getJumpedPods());
+        // showJumpedOver(game.getCurrentGameState().getInMoveJumps());
         processSelectedPiece(game.getCurrentGameState().getSelectedPod());
     }
 
@@ -103,12 +104,12 @@ public class BoardFragment extends Fragment {
         }
     }
 
-    private void showJumpedOver(List<Pair<Boolean, Vector2D>> jumpedPods) {
-        for (Pair<Boolean, Vector2D> jumpedPod: jumpedPods) {
-            Vector2D pos = jumpedPod.second;
+    private void showJumpedOver(List<Jump> jumps) {
+        for (Jump jump: jumps) {
+            Vector2D pos = jump.getTo();
             int x = pos.getX();
             int y = pos.getY();
-            cells[y][x].setJumpedOver(jumpedPod.first);
+            cells[y][x].setJumpedOver(jump.isEat());
         }
     }
 

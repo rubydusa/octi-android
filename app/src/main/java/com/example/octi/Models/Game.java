@@ -38,21 +38,6 @@ public class Game {
         currentGameState = new GameState();
     }
 
-    public boolean makeMove(Move move) {
-        Optional<GameState> nextGameState = currentGameState.makeMove(move);
-        if (!nextGameState.isPresent()) {
-            return false;
-        }
-
-        currentGameState = nextGameState.get();
-
-        // temporary: end game after 1 move to showcase firebase working
-        setWinner(Team.RED);
-        setStatus(Status.FINISHED);
-
-        return true;
-    }
-
     public String getGameId() {
         return gameId;
     }
