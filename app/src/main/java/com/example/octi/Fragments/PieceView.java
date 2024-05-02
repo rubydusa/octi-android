@@ -40,6 +40,7 @@ public class PieceView extends View{
     private final Drawable octagonArrowDrawable;
 
     private final Drawable octagonArrowFlippedDrawable;
+    private final Drawable octagonOutlineDrawable;
     private Pod pod;
 
     private boolean selected = false;
@@ -50,6 +51,7 @@ public class PieceView extends View{
         super(context);
 
         paint = new Paint();
+        octagonOutlineDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_outline);
         octagonDrawable = ContextCompat.getDrawable(context, R.drawable.octigon);
         octagonArrowDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_team_arrow);
         octagonArrowFlippedDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_team_arrow_flipped);
@@ -72,6 +74,7 @@ public class PieceView extends View{
 
     private void drawOctagon(Canvas canvas) {
         Game.Team team = pod.getTeam();
+        octagonOutlineDrawable.setBounds(canvas.getClipBounds());
         Drawable arrowDrawable = octagonArrowDrawable;
 
         if (team == Game.Team.RED) {
@@ -92,6 +95,7 @@ public class PieceView extends View{
             arrowDrawable.clearColorFilter();
         }
 
+        octagonOutlineDrawable.draw(canvas);
         octagonDrawable.draw(canvas);
         arrowDrawable.draw(canvas);
     }

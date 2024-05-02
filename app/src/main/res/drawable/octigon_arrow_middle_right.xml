@@ -8,6 +8,10 @@
         android:translateX="21"
         android:translateY="0">
         <path
+            android:strokeColor="@color/arrow_outline"
+            android:strokeWidth="1"
+            android:pathData="M3,13.5 L0,13.5 L0,10.5 L3,10.5 Z" />
+        <path
             android:fillColor="@color/arrow"
             android:pathData="M3,13.5 L0,13.5 L0,10.5 L3,10.5 Z" />
     </group>

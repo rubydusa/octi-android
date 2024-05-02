@@ -4,7 +4,14 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
-    <path
-        android:fillColor="@color/arrow"
-        android:pathData="M3,13.5 L0,13.5 L0,10.5 L3,10.5 Z" />
+    <group
+        android:translateX="0">
+        <path
+            android:strokeColor="@color/arrow_outline"
+            android:strokeWidth="1"
+            android:pathData="M3,13.5 L0,13.5 L0,10.5 L3,10.5 Z" />
+        <path
+            android:fillColor="@color/arrow"
+            android:pathData="M3,13.5 L0,13.5 L0,10.5 L3,10.5 Z" />
+    </group>
 </vector>

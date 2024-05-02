@@ -5,6 +5,10 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
     <path
+        android:strokeColor="@color/arrow_outline"
+        android:strokeWidth="1"
+        android:pathData="M4.5,6.5 L1.5,3.5 L3.5,1.5 L6.5,4.5 Z"/>
+    <path
         android:fillColor="@color/arrow"
         android:pathData="M4.5,6.5 L1.5,3.5 L3.5,1.5 L6.5,4.5 Z"/>
 </vector>
