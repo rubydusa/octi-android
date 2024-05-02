@@ -8,7 +8,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +73,7 @@ public class BoardFragment extends Fragment {
         clearPreviouslySelectedCells();
         colorCells(game.getCurrentGameState().getColoredCells());
         drawPieces(game.getCurrentGameState().getPods());
-        // showJumpedOver(game.getCurrentGameState().getInMoveJumps());
+        showJumpedOver(game.getCurrentGameState().getInMoveJumps());
         processSelectedPiece(game.getCurrentGameState().getSelectedPod());
     }
 
@@ -106,7 +105,7 @@ public class BoardFragment extends Fragment {
 
     private void showJumpedOver(List<Jump> jumps) {
         for (Jump jump: jumps) {
-            Vector2D pos = jump.getTo();
+            Vector2D pos = jump.getOver();
             int x = pos.getX();
             int y = pos.getY();
             cells[y][x].setJumpedOver(jump.isEat());

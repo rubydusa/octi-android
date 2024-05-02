@@ -59,25 +59,51 @@ public class GameState implements Cloneable {
         coloredCells.add(new ColoredCell(new Vector2D(4, 5), Game.Team.RED));
     }
 
-    public List<ColoredCell> getColoredCells() {
-        return coloredCells;
-    }
-
-    public List<Pod> getPods() {
-        return pods;
-    }
-
+    ///
+    /// Getters
+    ///
     public Game.Team getTurn() {
         return turn;
     }
+    public List<Pod> getPods() {
+        return pods;
+    }
+    public List<ColoredCell> getColoredCells() {
+        return coloredCells;
+    }
+    public boolean isInMove() {
+        return inMove;
+    }
+    public Pod getSelectedPod() {
+        return selectedPod;
+    }
+    public ArrayList<Jump> getInMoveJumps() {
+        return inMoveJumps;
+    }
 
-    public int getProngCount(Game.Team team) {
+    public int getCurrentTeamProngCount(Game.Team team) {
         if (team == Game.Team.RED) {
             return redProngCount;
         } else {
             return greenProngCount;
         }
     }
+
+    @Nullable
+    public Pod findPod(Vector2D position) {
+        for (Pod pod:
+                pods) {
+            if (pod.getPosition().equals(position)) {
+                return pod;
+            }
+        }
+
+        return null;
+    }
+
+    ///
+    /// Pod selection
+    ///
 
     public void selectPod(Vector2D position) {
         Pod pod = findPod(position);
@@ -94,6 +120,10 @@ public class GameState implements Cloneable {
     public void deselectPod() {
         selectedPod = null;
     }
+
+    ///
+    /// Next Possible Moves
+    ///
 
     public ArrayList<Vector2D> nextPossibleMoves() {
         Pod pod = selectedPod;
@@ -130,6 +160,10 @@ public class GameState implements Cloneable {
         return result;
     }
 
+    ///
+    /// Move Types
+    ///
+
     public void advanceSelectedPod(Vector2D to) {
         Pod pod = selectedPod;
         if (pod == null) {
@@ -151,7 +185,7 @@ public class GameState implements Cloneable {
 
         // jump option
         if (findPod(next1) != null && findPod(next2) == null) {
-            inMoveJumps.add(new Jump(false, next2));
+            inMoveJumps.add(new Jump(false, next1));
             selectedPod.setPosition(next2);
         }
 
@@ -165,7 +199,7 @@ public class GameState implements Cloneable {
 
     // caller needs to catch
     public void placeProng(Vector2D target, int prong) throws RuntimeException {
-        int prongCount = getProngCount(turn);
+        int prongCount = getCurrentTeamProngCount(turn);
         if (prongCount <= 0) {
             throw new RuntimeException("no prongs to place");
         }
@@ -188,18 +222,6 @@ public class GameState implements Cloneable {
         cleanUp();
     }
 
-    @Nullable
-    public Pod findPod(Vector2D position) {
-        for (Pod pod:
-             pods) {
-            if (pod.getPosition().equals(position)) {
-                return pod;
-            }
-        }
-
-        return null;
-    }
-
     @NonNull
     @Override
     public GameState clone() {
@@ -211,14 +233,6 @@ public class GameState implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
-    }
-
-    public Pod getSelectedPod() {
-        return selectedPod;
-    }
-
-    public boolean isInMove() {
-        return inMove;
     }
 
     public void finalizeState() {
@@ -261,9 +275,5 @@ public class GameState implements Cloneable {
         inMove = false;
         deselectPod();
         inMoveJumps.clear();
-    }
-
-    public ArrayList<Jump> getInMoveJumps() {
-        return inMoveJumps;
     }
 }

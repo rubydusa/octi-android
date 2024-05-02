@@ -2,11 +2,11 @@ package com.example.octi.Models;
 
 public class Jump {
     private boolean isEat;
-    private Vector2D to;
+    private Vector2D over;
 
-    public Jump(boolean isEat, Vector2D to) {
+    public Jump(boolean isEat, Vector2D over) {
         this.isEat = isEat;
-        this.to = to;
+        this.over = over;
     }
 
     public boolean isEat() {
@@ -17,11 +17,11 @@ public class Jump {
         isEat = eat;
     }
 
-    public Vector2D getTo() {
-        return to;
+    public Vector2D getOver() {
+        return over;
     }
 
-    public void setTo(Vector2D to) {
-        this.to = to;
+    public void setOver(Vector2D over) {
+        this.over = over;
     }
 }
