@@ -1,5 +1,7 @@
 package com.example.octi.Models;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -144,6 +146,11 @@ public class GameState implements Cloneable {
             Vector2D next1 = pod.getPosition().add(direction);
             Vector2D next2 = next1.add(direction);
 
+            // ignore invalid cells
+            if (!GameState.inBound(next1)) {
+                continue;
+            }
+
             // jump option
             if (findPod(next1) != null && findPod(next2) == null) {
                 result.add(next2);
@@ -275,5 +282,9 @@ public class GameState implements Cloneable {
         inMove = false;
         deselectPod();
         inMoveJumps.clear();
+    }
+
+    static private boolean inBound(Vector2D position) {
+        return position.getX() >= 0 && position.getX() <= 5 && position.getY() >= 0 && position.getY() <= 6;
     }
 }
