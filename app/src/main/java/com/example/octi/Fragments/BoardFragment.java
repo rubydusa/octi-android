@@ -122,6 +122,7 @@ public class BoardFragment extends Fragment {
         }
     }
 
+    // every cell holds a piece view but it might be empty
     public class Cell {
         private boolean selected = false;
 
@@ -131,7 +132,7 @@ public class BoardFragment extends Fragment {
 
         private final int x;
         private final int y;
-        @Nullable
+
         private PieceView piece;
 
         public Cell(
@@ -144,6 +145,7 @@ public class BoardFragment extends Fragment {
             this.y = y;
 
             context = getContext();
+            piece = new PieceView(context);
 
             // create frame layout
             frame = new FrameLayout(context);
@@ -153,6 +155,7 @@ public class BoardFragment extends Fragment {
 
             // set background
             frame.setBackgroundResource(R.drawable.cell_background);
+            frame.addView(piece);
 
             setCellColor(color);
 
@@ -188,9 +191,7 @@ public class BoardFragment extends Fragment {
         }
 
         public void setPiece(Pod pod) {
-            piece = new PieceView(context);
             piece.setPod(pod);
-            frame.addView(piece);
         }
 
         public void setSelection(boolean state) {
@@ -199,7 +200,7 @@ public class BoardFragment extends Fragment {
                 return;
             }
             selected = state;
-            if (piece == null) {
+            if (piece.getPod() == null) {
                 if (selected) {
                     frame.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
                     frame.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
@@ -207,7 +208,6 @@ public class BoardFragment extends Fragment {
                     frame.getBackground().clearColorFilter();
                     frame.getBackground().clearColorFilter();
                 }
-                return;
             } else {
                 piece.setSelection(selected);
             }

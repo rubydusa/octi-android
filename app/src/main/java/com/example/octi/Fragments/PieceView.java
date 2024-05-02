@@ -53,6 +53,9 @@ public class PieceView extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (pod == null) {
+            return;
+        }
         drawOctagon(canvas);
         drawArrows(canvas);
     }
