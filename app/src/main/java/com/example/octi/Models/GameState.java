@@ -125,9 +125,22 @@ public class GameState implements Cloneable {
         }
     }
 
-    // throws if selected pod not exists or invalid
-    public void selectPod(int x, int y) {
-        selectPod(new Vector2D(x, y));
+    public ArrayList<Pair<Boolean, Vector2D>> getJumpedPods() {
+        if (inMoveActions.size() != jumpedPods.size()) {
+            throw new RuntimeException("inMoveActions and jumpedPods should be of same length");
+        }
+
+        ArrayList<Pair<Boolean, Vector2D>> result = new ArrayList<>();
+        for (int i = 0; i < inMoveActions.size(); i++) {
+            Pair<Boolean, Vector2D> jumpedPair = new Pair<>(
+                    inMoveActions.get(i).getEat(),
+                    jumpedPods.get(i)
+            );
+
+            result.add(jumpedPair);
+        }
+
+        return result;
     }
 
     public void selectPod(Vector2D position) {
@@ -146,15 +159,13 @@ public class GameState implements Cloneable {
         selectedPod = null;
     }
 
-    // integer - prong identifier
-    // Vector2D - position it ends up on
-    public ArrayList<Pair<Integer, Vector2D>> nextPossibleMoves() {
+    public ArrayList<Vector2D> nextPossibleMoves() {
         Pod pod = selectedPod;
         if (pod == null) {
             throw new RuntimeException("Pod not selected");
         }
 
-        ArrayList<Pair<Integer, Vector2D>> result = new ArrayList<>();
+        ArrayList<Vector2D> result = new ArrayList<>();
 
         ArrayList<Boolean> prongs = pod.getProngs();
         for (int i = 0; i < 8; i++) {
@@ -169,13 +180,13 @@ public class GameState implements Cloneable {
 
             // jump option
             if (findPod(next1) != null && findPod(next2) == null) {
-                result.add(new Pair<>(i, next2));
+                result.add(next2);
             }
 
             // simple move option
             if (!inMove) {
                 if (findPod(next1) == null) {
-                    result.add(new Pair<>(i, next1));
+                    result.add(next1);
                 }
             }
         }
@@ -205,11 +216,8 @@ public class GameState implements Cloneable {
         // jump option
         if (findPod(next1) != null && findPod(next2) == null) {
             jumpedPods.add(next1);
+            inMoveActions.add(new Action(prong, false));
             selectedPod.setPosition(next2);
-            if (nextPossibleMoves().isEmpty()) {
-                nextTurn();
-                cleanUp();
-            }
         }
 
         // simple move option
@@ -286,4 +294,13 @@ public class GameState implements Cloneable {
         return selectedPod;
     }
 
+    public boolean isInMove() {
+        return inMove;
+    }
+
+    public void finalizeState() {
+        // remove eaten pods
+        nextTurn();
+        cleanUp();
+    }
 }

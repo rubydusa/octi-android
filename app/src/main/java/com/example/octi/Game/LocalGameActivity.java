@@ -62,4 +62,8 @@ public class LocalGameActivity extends AppCompatActivity {
     private void prongPlaceMove(int prong) {
         presenter.prongPlaceMove(prong);
     }
+
+    public void finalizeOnClick(View view) {
+        presenter.finalizeMove();
+    }
 }

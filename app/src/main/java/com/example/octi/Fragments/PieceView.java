@@ -3,6 +3,7 @@ package com.example.octi.Fragments;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class PieceView extends View{
         prong2prongDrawable[7] = R.drawable.octigon_arrow_bottom_right;
     }
 
+    private final Paint paint;
     private final Drawable octagonDrawable;
     private final Drawable octagonArrowDrawable;
 
@@ -41,10 +43,13 @@ public class PieceView extends View{
     private Pod pod;
 
     private boolean selected = false;
+    private boolean jumpedOver = false;
+    private boolean selectedForEating = false;
 
     public PieceView(Context context) {
         super(context);
 
+        paint = new Paint();
         octagonDrawable = ContextCompat.getDrawable(context, R.drawable.octigon);
         octagonArrowDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_team_arrow);
         octagonArrowFlippedDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_team_arrow_flipped);
@@ -58,6 +63,7 @@ public class PieceView extends View{
         }
         drawOctagon(canvas);
         drawArrows(canvas);
+        drawEatSelection(canvas);
     }
 
     public Pod getPod() {
@@ -109,15 +115,41 @@ public class PieceView extends View{
         }
     }
 
+    public void drawEatSelection(Canvas canvas) {
+        if (!jumpedOver) {
+            return;
+        }
+
+        if (selectedForEating) {
+            paint.setColor(Color.RED);
+        } else {
+            paint.setColor(Color.GREEN);
+        }
+        paint.setAlpha(100);
+        paint.setStyle( Paint.Style.FILL );
+        canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
+    }
+
     public void setPod(Pod pod) {
         this.pod = pod;
-        // cause to rerender
+        // cause to re-render
         invalidate();
     }
 
     public void setSelection(boolean state) {
         selected = state;
-        // cause to rerender
+        // cause to re-render
         invalidate();
+    }
+
+    public void setEatSelection(boolean state) {
+        jumpedOver = true;
+        selectedForEating = state;
+        invalidate();
+    }
+
+    public void clearEatSelection() {
+        jumpedOver = false;
+        selectedForEating = false;
     }
 }

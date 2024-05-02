@@ -73,6 +73,7 @@ public class BoardFragment extends Fragment {
         clearPreviouslySelectedCells();
         colorCells(game.getCurrentGameState().getColoredCells());
         drawPieces(game.getCurrentGameState().getPods());
+        showJumpedOver(game.getCurrentGameState().getJumpedPods());
         processSelectedPiece(game.getCurrentGameState().getSelectedPod());
     }
 
@@ -102,7 +103,16 @@ public class BoardFragment extends Fragment {
         }
     }
 
-    public void processSelectedPiece(Pod piece) {
+    private void showJumpedOver(List<Pair<Boolean, Vector2D>> jumpedPods) {
+        for (Pair<Boolean, Vector2D> jumpedPod: jumpedPods) {
+            Vector2D pos = jumpedPod.second;
+            int x = pos.getX();
+            int y = pos.getY();
+            cells[y][x].setJumpedOver(jumpedPod.first);
+        }
+    }
+
+    private void processSelectedPiece(Pod piece) {
         if (piece == null) {
             return;
         }
@@ -111,9 +121,9 @@ public class BoardFragment extends Fragment {
         int y = pod.getY();
         cells[y][x].setSelection(true);
 
-        ArrayList<Pair<Integer, Vector2D>> possibleNextMoves = lastRenderedGame.getCurrentGameState().nextPossibleMoves();
-        for (Pair<Integer, Vector2D> nextMove : possibleNextMoves) {
-            cells[nextMove.second.getY()][nextMove.second.getX()].setSelection(true);
+        ArrayList<Vector2D> possibleNextMoves = lastRenderedGame.getCurrentGameState().nextPossibleMoves();
+        for (Vector2D nextMove : possibleNextMoves) {
+            cells[nextMove.getY()][nextMove.getX()].setSelection(true);
         }
     }
 
@@ -192,6 +202,7 @@ public class BoardFragment extends Fragment {
         }
 
         public void clearCell() {
+            piece.clearEatSelection();
             piece.setPod(null);
         }
 
@@ -216,6 +227,10 @@ public class BoardFragment extends Fragment {
             } else {
                 piece.setSelection(selected);
             }
+        }
+
+        public void setJumpedOver(boolean eatState) {
+            piece.setEatSelection(eatState);
         }
 
         private int getCellColorResource(@Nullable Game.Team color) {

@@ -46,7 +46,8 @@ public class LocalGamePresenter implements BoardFragment.CellClickListener {
 
         if (clickedPod != null &&
                 clickedPod != previouslySelectedPod &&
-                clickedPod.getTeam() == game.getCurrentGameState().getTurn()
+                clickedPod.getTeam() == game.getCurrentGameState().getTurn() &&
+                !game.getCurrentGameState().isInMove()
         ) {
             game.getCurrentGameState().selectPod(clickedPod.getPosition());
         } else if (
@@ -57,6 +58,17 @@ public class LocalGamePresenter implements BoardFragment.CellClickListener {
             // game.getCurrentGameState()
             game.getCurrentGameState().selectPod(previouslySelectedPod.getPosition());
             game.getCurrentGameState().advanceSelectedPod(cell.getPosition());
+        }
+        if (game.getCurrentGameState().isInMove()) {
+            game.getCurrentGameState().selectPod(previouslySelectedPod.getPosition());
+        }
+
+        view.drawBoard(game);
+    }
+
+    public void finalizeMove() {
+        if (game.getCurrentGameState().isInMove()) {
+            game.getCurrentGameState().finalizeState();
         }
 
         view.drawBoard(game);
