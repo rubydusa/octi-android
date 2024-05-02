@@ -1,5 +1,7 @@
 package com.example.octi;
 
+import androidx.annotation.Nullable;
+
 import com.example.octi.Fragments.BoardFragment;
 import com.example.octi.Fragments.CellView;
 import com.example.octi.Models.Game;
@@ -11,25 +13,30 @@ import java.util.List;
 
 public class GameHandler implements BoardFragment.CellClickListener {
     private Game game;
-    private boolean lock = false;
+    // allow only specific team to play through game handler
+    @Nullable
+    private Game.Team permission;
+    private int lastHighestVersion = -1;
     private GameChangesListener listener;
 
-    public GameHandler(Game game, GameChangesListener listener) {
+    public GameHandler(Game game, Game.Team permission, GameChangesListener listener) {
         this.game = game;
         this.listener = listener;
     }
 
-    public void unlock() {
-        lock = false;
+    public void setGame(Game game) {
+        if (game.getVersion() <= lastHighestVersion) {
+            return;
+        }
+        this.game = game;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
-        lock = false;
+    public void setPermission(@Nullable Game.Team permission) {
+        this.permission = permission;
     }
 
     public void prongPlaceMove(int prong) {
-        if (game == null || lock) {
+        if (game == null || !checkPermission()) {
             return;
         }
 
@@ -49,7 +56,7 @@ public class GameHandler implements BoardFragment.CellClickListener {
 
     @Override
     public void onCellClicked(CellView cellView) {
-        if (game == null || lock) {
+        if (game == null || !checkPermission()) {
             return;
         }
 
@@ -86,21 +93,31 @@ public class GameHandler implements BoardFragment.CellClickListener {
             }
         }
 
-        lock = true;
         listener.realizeGameChanges(game);
     }
 
     public void finalizeMove() {
-        if (game == null || lock) {
+        if (game == null || !checkPermission()) {
             return;
         }
 
         if (game.getCurrentGameState().isInMove()) {
             game.getCurrentGameState().finalizeState();
+            listener.realizeGameChanges(game);
         }
+    }
 
-        lock = true;
+    private void startRealizeGameChanges(Game game) {
+        game.incrementVersion();
         listener.realizeGameChanges(game);
+    }
+
+    private boolean checkPermission() {
+        return permission == null || permission == game.getCurrentGameState().getTurn();
+    }
+
+    public boolean isPermissioned() {
+        return permission != null;
     }
 
     public interface GameChangesListener {

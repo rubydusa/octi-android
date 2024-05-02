@@ -6,6 +6,7 @@ import com.example.octi.GameHandler;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.Pod;
 import com.example.octi.Models.Vector2D;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class OnlineGamePresenter implements Repository.LoadGameListener, GameHandler.GameChangesListener {
     OnlineGameActivity view;
@@ -19,7 +20,8 @@ public class OnlineGamePresenter implements Repository.LoadGameListener, GameHan
         this.id = id;
         this.board = board;
 
-        gameHandler = new GameHandler(null, this);
+        // game locked until loaded
+        gameHandler = new GameHandler(null, null, this);
         board.setCellClickListener(gameHandler);
         Repository.getInstance().setLoadGameListener(this);
         Repository.getInstance().readGame(id);
@@ -30,10 +32,21 @@ public class OnlineGamePresenter implements Repository.LoadGameListener, GameHan
     public void updateGame(Game game) {
         if (game.getStatus() == Game.Status.FINISHED) {
             view.navigateToGameOver(game.getGameId());
+            return;
+        }
+
+        if (!gameHandler.isPermissioned()) {
+            Game.Team permission;
+            if (FirebaseAuth.getInstance().getUid().equals(game.getUser1().getId())) {
+                permission = Game.Team.RED;
+            } else {
+                permission = Game.Team.GREEN;
+            }
+
+            gameHandler.setPermission(permission);
         }
 
         gameHandler.setGame(game);
-        gameHandler.unlock();
         board.drawBoard(game);
         view.displayGameInfo(game);
     }

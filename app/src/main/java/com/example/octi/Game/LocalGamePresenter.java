@@ -13,7 +13,7 @@ public class LocalGamePresenter implements GameHandler.GameChangesListener {
         this.view = view;
         this.board = board;
         Game game = new Game(null, null, null);
-        gameHandler = new GameHandler(game, this);
+        gameHandler = new GameHandler(game, null,this);
         board.setCellClickListener(gameHandler);
         board.drawBoard(game);
     }
@@ -29,6 +29,5 @@ public class LocalGamePresenter implements GameHandler.GameChangesListener {
     @Override
     public void realizeGameChanges(Game game) {
         board.drawBoard(game);
-        gameHandler.unlock();
     }
 }

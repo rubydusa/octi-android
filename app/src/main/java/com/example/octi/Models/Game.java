@@ -16,6 +16,7 @@ public class Game {
         FINISHED
     }
 
+    private int version = 0;
     private String gameId;
     private User user1;
     private User user2;
@@ -80,5 +81,12 @@ public class Game {
 
     public void setWinner(Team winner) {
         this.winner = winner;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+    public void incrementVersion() {
+        version++;
     }
 }
