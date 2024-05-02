@@ -8,15 +8,14 @@ public class LocalGamePresenter implements GameHandler.GameChangesListener {
     LocalGameActivity view;
     BoardFragment board;
     GameHandler gameHandler;
-    Game game;
 
     public LocalGamePresenter(LocalGameActivity view, BoardFragment board) {
         this.view = view;
         this.board = board;
-        game = new Game(null, null, null);
+        Game game = new Game(null, null, null);
         gameHandler = new GameHandler(game, this);
         board.setCellClickListener(gameHandler);
-        view.drawBoard(game);
+        board.drawBoard(game);
     }
 
     public void finalizeMove() {
@@ -29,6 +28,7 @@ public class LocalGamePresenter implements GameHandler.GameChangesListener {
 
     @Override
     public void realizeGameChanges(Game game) {
-        view.drawBoard(game);
+        board.drawBoard(game);
+        gameHandler.unlock();
     }
 }

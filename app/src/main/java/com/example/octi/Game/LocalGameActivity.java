@@ -12,19 +12,14 @@ import com.example.octi.Models.Game;
 public class LocalGameActivity extends AppCompatActivity {
     LocalGamePresenter presenter;
 
-    BoardFragment board;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_game);
 
-        board = (BoardFragment) getSupportFragmentManager().findFragmentById(R.id.board_fragment);
+        BoardFragment board = (BoardFragment) getSupportFragmentManager().findFragmentById(R.id.board_fragment);
         presenter = new LocalGamePresenter(this, board);
-    }
-
-    public void drawBoard(Game game) {
-        board.drawBoard(game);
     }
 
     public void middleRightProngOnClick(View view) {

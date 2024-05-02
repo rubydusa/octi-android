@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class GameState implements Cloneable {
@@ -246,7 +247,39 @@ public class GameState implements Cloneable {
     }
 
     public void finalizeState() {
-        // remove eaten pods
+        // clear eaten pods
+        HashSet<Pod> deadPods = new HashSet<>();
+        for (Jump jump: inMoveJumps) {
+            Pod pod = findPod(jump.getOver());
+            if (pod == null) {
+                throw new IllegalStateException("can't find jumped over pod");
+            }
+            if (jump.isEat()) {
+                int prongCount = 0;
+                for (int i = 0; i < 8; i++) {
+                    if (pod.getProngs().get(i)) {
+                        prongCount++;
+                    }
+                }
+
+                if (getTurn() == Game.Team.RED) {
+                    redProngCount += prongCount;
+                } else {
+                    greenProngCount += prongCount;
+                }
+
+                deadPods.add(pod);
+            }
+        }
+
+        ArrayList<Pod> newPods = new ArrayList<>();
+        for (Pod pod: pods) {
+            if (!deadPods.contains(pod)) {
+                newPods.add(pod);
+            }
+        }
+
+        pods = newPods;
         nextTurn();
         cleanUp();
     }

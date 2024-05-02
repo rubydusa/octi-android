@@ -2,22 +2,25 @@ package com.example.octi.Game;
 
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Fragments.BoardFragment;
+import com.example.octi.GameHandler;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.Pod;
 import com.example.octi.Models.Vector2D;
 
-public class OnlineGamePresenter implements Repository.LoadGameListener {
+public class OnlineGamePresenter implements Repository.LoadGameListener, GameHandler.GameChangesListener {
     OnlineGameActivity view;
     BoardFragment board;
+
+    GameHandler gameHandler;
     String id;
-    Game game;
 
     public OnlineGamePresenter(OnlineGameActivity view, BoardFragment board, String id) {
         this.view = view;
         this.id = id;
         this.board = board;
 
-        // board.setCellClickListener(this);
+        gameHandler = new GameHandler(null, this);
+        board.setCellClickListener(gameHandler);
         Repository.getInstance().setLoadGameListener(this);
         Repository.getInstance().readGame(id);
     }
@@ -28,42 +31,23 @@ public class OnlineGamePresenter implements Repository.LoadGameListener {
         if (game.getStatus() == Game.Status.FINISHED) {
             view.navigateToGameOver(game.getGameId());
         }
-        this.game = game;
+
+        gameHandler.setGame(game);
+        gameHandler.unlock();
         board.drawBoard(game);
         view.displayGameInfo(game);
     }
 
-    /*
+    public void finalizeMove() {
+        gameHandler.finalizeMove();
+    }
+
     public void prongPlaceMove(int prong) {
-        Pod selectedPod = game.getCurrentGameState().getSelectedPod();
-        if (selectedPod == null) {
-            return;
-        }
-
-        Vector2D target = selectedPod.getPosition();
-
-        Move move = Move.createPlaceMove(target, prong);
-        if (game.makeMove(move)) {
-            Repository.getInstance().updateGame(game);
-        } else {
-            // notify player of problematic move
-        }
+        gameHandler.prongPlaceMove(prong);
     }
 
     @Override
-    public void onCellClicked(BoardFragment.Cell cell) {
-        Pod clickedPod = cell.getPod();
-        Pod previouslySelectedPod = game.getCurrentGameState().getSelectedPod();
-        game.getCurrentGameState().deselectPod();
-
-        if (clickedPod != null &&
-                clickedPod != previouslySelectedPod &&
-                clickedPod.getTeam() == game.getCurrentGameState().getTurn()
-        ) {
-            game.getCurrentGameState().selectPod(clickedPod.getPosition());
-        }
-
+    public void realizeGameChanges(Game game) {
         Repository.getInstance().updateGame(game);
     }
-    */
 }

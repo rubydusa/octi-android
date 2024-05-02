@@ -58,7 +58,7 @@ public class OnlineGameActivity extends AppCompatActivity {
     }
 
     private void prongPlaceMove(int prong) {
-        // presenter.prongPlaceMove(prong);
+        presenter.prongPlaceMove(prong);
     }
 
     public void navigateToGameOver(String gameId) {
@@ -72,5 +72,9 @@ public class OnlineGameActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tv_player1_game)).setText(String.format("Player 1 (red): %s", game.getUser1().getName()));
         ((TextView) findViewById(R.id.tv_player2_game)).setText(String.format("Player 2 (green): %s", game.getUser2().getName()));
         ((TextView) findViewById(R.id.tv_turn_game)).setText(game.getCurrentGameState().getTurn() == Game.Team.RED ? "Turn: red" : "Turn: green");
+    }
+
+    public void finalizeOnClick(View view) {
+        presenter.finalizeMove();
     }
 }

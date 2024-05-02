@@ -36,4 +36,12 @@ public class Pod {
     public void setPosition(Vector2D position) {
         this.position = position;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pod pod = (Pod) o;
+        return pod.getPosition().equals(this.position);
+    }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 public class GameHandler implements BoardFragment.CellClickListener {
     private Game game;
+    private boolean lock = false;
     private GameChangesListener listener;
 
     public GameHandler(Game game, GameChangesListener listener) {
@@ -18,7 +19,20 @@ public class GameHandler implements BoardFragment.CellClickListener {
         this.listener = listener;
     }
 
+    public void unlock() {
+        lock = false;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+        lock = false;
+    }
+
     public void prongPlaceMove(int prong) {
+        if (game == null || lock) {
+            return;
+        }
+
         Pod selectedPod = game.getCurrentGameState().getSelectedPod();
         if (selectedPod == null) {
             return;
@@ -35,12 +49,16 @@ public class GameHandler implements BoardFragment.CellClickListener {
 
     @Override
     public void onCellClicked(CellView cellView) {
+        if (game == null || lock) {
+            return;
+        }
+
         Pod clickedPod = cellView.getPod();
         Pod previouslySelectedPod = game.getCurrentGameState().getSelectedPod();
         game.getCurrentGameState().deselectPod();
 
         if (clickedPod != null &&
-                clickedPod != previouslySelectedPod &&
+                !clickedPod.equals(previouslySelectedPod) &&
                 clickedPod.getTeam() == game.getCurrentGameState().getTurn() &&
                 !game.getCurrentGameState().isInMove()
         ) {
@@ -54,8 +72,12 @@ public class GameHandler implements BoardFragment.CellClickListener {
             // select possible move
             game.getCurrentGameState().selectPod(previouslySelectedPod.getPosition());
             game.getCurrentGameState().advanceSelectedPod(cellView.getPosition());
-        } else if (game.getCurrentGameState().isInMove()) {
-            // togge eat selection
+        } else if (
+                game.getCurrentGameState().isInMove() &&
+                previouslySelectedPod != null
+        ) {
+            // toggle eat selection
+            game.getCurrentGameState().selectPod(previouslySelectedPod.getPosition());
             List<Jump> jumps = game.getCurrentGameState().getInMoveJumps();
             for (Jump jump: jumps) {
                 if (jump.getOver().equals(cellView.getPosition())) {
@@ -64,18 +86,20 @@ public class GameHandler implements BoardFragment.CellClickListener {
             }
         }
 
-        if (game.getCurrentGameState().isInMove()) {
-            game.getCurrentGameState().selectPod(previouslySelectedPod.getPosition());
-        }
-
+        lock = true;
         listener.realizeGameChanges(game);
     }
 
     public void finalizeMove() {
+        if (game == null || lock) {
+            return;
+        }
+
         if (game.getCurrentGameState().isInMove()) {
             game.getCurrentGameState().finalizeState();
         }
 
+        lock = true;
         listener.realizeGameChanges(game);
     }
 

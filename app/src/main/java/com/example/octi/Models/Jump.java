@@ -4,6 +4,8 @@ public class Jump {
     private boolean isEat;
     private Vector2D over;
 
+    public Jump() {}
+
     public Jump(boolean isEat, Vector2D over) {
         this.isEat = isEat;
         this.over = over;
