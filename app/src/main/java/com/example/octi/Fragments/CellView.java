@@ -6,21 +6,21 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.example.octi.Models.Vector2D;
 import com.example.octi.R;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.Pod;
-import com.example.octi.Models.Vector2D;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class PieceView extends View{
+public class CellView extends View{
     private static final int[] prong2prongDrawable = new int[8];
 
     static {
@@ -35,6 +35,8 @@ public class PieceView extends View{
         prong2prongDrawable[7] = R.drawable.octigon_arrow_bottom_right;
     }
 
+    private final FrameLayout frame;
+
     private final Paint paint;
     private final Drawable octagonDrawable;
     private final Drawable octagonArrowDrawable;
@@ -42,24 +44,48 @@ public class PieceView extends View{
     private final Drawable octagonArrowFlippedDrawable;
     private final Drawable octagonOutlineDrawable;
     private Pod pod;
+    @Nullable
+    private Game.Team color;
 
+    private final Vector2D position;
     private boolean selected = false;
     private boolean jumpedOver = false;
     private boolean selectedForEating = false;
 
-    public PieceView(Context context) {
+    public CellView(Context context, GridLayout gridLayout, Vector2D position, CellClickListener listener) {
         super(context);
-
+        // allocate resources
         paint = new Paint();
         octagonOutlineDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_outline);
         octagonDrawable = ContextCompat.getDrawable(context, R.drawable.octigon);
         octagonArrowDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_team_arrow);
         octagonArrowFlippedDrawable = ContextCompat.getDrawable(context, R.drawable.octigon_team_arrow_flipped);
+
+        // create frame layout
+        frame = new FrameLayout(context);
+        frame.setId(View.generateViewId());
+        frame.setClickable(true);
+        frame.setOnClickListener(v -> listener.onCellClick(this));
+        frame.setBackgroundResource(R.drawable.cell_background);
+
+        // add to grid
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.width = 0;
+        params.height = 0;
+        params.columnSpec = GridLayout.spec(position.getX(), 1f);
+        params.rowSpec = GridLayout.spec(position.getY(), 1f);
+        gridLayout.addView(frame, params);
+
+        // display self in frame
+        frame.addView(this);
+
+        this.position = position;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        drawCell(canvas);
         if (pod == null) {
             return;
         }
@@ -70,6 +96,21 @@ public class PieceView extends View{
 
     public Pod getPod() {
         return pod;
+    }
+
+    public Vector2D getPosition() { return position; }
+
+    public boolean isSelected() { return selected; }
+
+    private void drawCell(Canvas canvas) {
+        int colorResource = getCellColorResource(color);
+        int color = ContextCompat.getColor(getContext(), colorResource);
+        if (selected && pod == null) {
+            color = Color.GREEN;
+        }
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
     }
 
     private void drawOctagon(Canvas canvas) {
@@ -119,7 +160,7 @@ public class PieceView extends View{
         }
     }
 
-    public void drawEatSelection(Canvas canvas) {
+    private void drawEatSelection(Canvas canvas) {
         if (!jumpedOver) {
             return;
         }
@@ -140,6 +181,12 @@ public class PieceView extends View{
         invalidate();
     }
 
+    public void setColor(Game.Team color) {
+        this.color = color;
+        // cause to re-render
+        invalidate();
+    }
+
     public void setSelection(boolean state) {
         selected = state;
         // cause to re-render
@@ -149,11 +196,36 @@ public class PieceView extends View{
     public void setEatSelection(boolean state) {
         jumpedOver = true;
         selectedForEating = state;
+        // cause to re-render
         invalidate();
     }
 
-    public void clearEatSelection() {
+    public void clearCell() {
+        pod = null;
+        selected = false;
         jumpedOver = false;
         selectedForEating = false;
+        invalidate();
+    }
+
+    private int getCellColorResource(@Nullable Game.Team color) {
+        if (color == null) {
+            return R.color.cell_background;
+        } else {
+            switch (color) {
+                case RED:
+                    return R.color.light_team_red;
+                case GREEN:
+                    return R.color.light_team_green;
+            }
+        }
+
+        // TODO: Clarify in code this is unreachable
+        return 0;
+    }
+
+
+    public interface CellClickListener {
+        void onCellClick(CellView cellView);
     }
 }

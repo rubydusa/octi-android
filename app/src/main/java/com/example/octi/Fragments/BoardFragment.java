@@ -27,12 +27,13 @@ import com.example.octi.Models.Pod;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardFragment extends Fragment {
+public class BoardFragment extends Fragment implements CellView.CellClickListener {
 
     private static final int COLUMNS = 6;
     private static final int ROWS = 7;
 
-    private final Cell[][] cells = new Cell[ROWS][COLUMNS];
+    // first index is y second is x
+    private final CellView[][] cells = new CellView[ROWS][COLUMNS];
 
     private Game lastRenderedGame;
 
@@ -49,15 +50,10 @@ public class BoardFragment extends Fragment {
 
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
-                Cell cell = new Cell(
-                        gridLayout,
-                        j,
-                        i,
-                        null
-                );
+                Vector2D position = new Vector2D(j, i);
 
-
-                cells[i][j] = cell;
+                CellView cellView = new CellView(getContext(), gridLayout, position, this);
+                cells[i][j] = cellView;
             }
         }
 
@@ -70,17 +66,16 @@ public class BoardFragment extends Fragment {
 
     public void drawBoard(Game game) {
         lastRenderedGame = game;
-        clearPreviouslySelectedCells();
+        clearCells();
         colorCells(game.getCurrentGameState().getColoredCells());
         drawPieces(game.getCurrentGameState().getPods());
         showJumpedOver(game.getCurrentGameState().getInMoveJumps());
         processSelectedPiece(game.getCurrentGameState().getSelectedPod());
     }
 
-    private void clearPreviouslySelectedCells() {
+    private void clearCells() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
-                cells[i][j].setSelection(false);
                 cells[i][j].clearCell();
             }
         }
@@ -90,7 +85,7 @@ public class BoardFragment extends Fragment {
         for (ColoredCell coloredCell : colors) {
             Vector2D coordinates = coloredCell.getPosition();
             Game.Team color = coloredCell.getColor();
-            cells[coordinates.getY()][coordinates.getX()].setCellColor(color);
+            cells[coordinates.getY()][coordinates.getX()].setColor(color);
         }
     }
 
@@ -99,7 +94,7 @@ public class BoardFragment extends Fragment {
             Vector2D pos = piece.getPosition();
             int x = pos.getX();
             int y = pos.getY();
-            cells[y][x].setPiece(piece);
+            cells[y][x].setPod(piece);
         }
     }
 
@@ -108,7 +103,7 @@ public class BoardFragment extends Fragment {
             Vector2D pos = jump.getOver();
             int x = pos.getX();
             int y = pos.getY();
-            cells[y][x].setJumpedOver(jump.isEat());
+            cells[y][x].setEatSelection(jump.isEat());
         }
     }
 
@@ -127,138 +122,17 @@ public class BoardFragment extends Fragment {
         }
     }
 
-    private void onCellClicked(Cell cell) {
+
+    @Override
+    public void onCellClick(CellView cellView) {
         if (cellClickListener != null) {
-            cellClickListener.onCellClicked(cell);
+            cellClickListener.onCellClicked(cellView);
         }
     }
+
 
     // every cell holds a piece view but it might be empty
-    public class Cell {
-        private boolean selected = false;
-
-        private final FrameLayout frame;
-
-        private final Context context;
-
-        private final int x;
-        private final int y;
-
-        private PieceView piece;
-
-        public Cell(
-                GridLayout gridLayout,
-                int x,
-                int y,
-                @Nullable Game.Team color
-        ) {
-            this.x = x;
-            this.y = y;
-
-            context = getContext();
-            piece = new PieceView(context);
-
-            // create frame layout
-            frame = new FrameLayout(context);
-            frame.setId(View.generateViewId());
-            frame.setClickable(true);
-            frame.setOnClickListener(v -> onCellClicked(this));
-
-            // set background
-            frame.setBackgroundResource(R.drawable.cell_background);
-            frame.addView(piece);
-
-            setCellColor(color);
-
-            // add cell to grid layout
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 0;
-            params.height = 0;
-            params.columnSpec = GridLayout.spec(x, 1f);
-            params.rowSpec = GridLayout.spec(y, 1f);
-            gridLayout.addView(frame, params);
-        }
-
-        public Pod getPod() {
-            if (piece != null) {
-                return piece.getPod();
-            }
-            return null;
-        }
-
-        public void setCellColor(@Nullable Game.Team color) {
-            LayerDrawable backgroundLayer = (LayerDrawable) frame.getBackground();
-            Drawable backgroundDrawable = backgroundLayer.getDrawable(1);
-            backgroundDrawable.mutate();
-
-            int colorResourceId = getCellColorResource(color);
-            int colorResource = getResources().getColor(colorResourceId, context.getTheme());
-
-            if (backgroundDrawable instanceof ShapeDrawable) {
-                ((ShapeDrawable) backgroundDrawable).getPaint().setColor(colorResource);
-            } else if (backgroundDrawable instanceof GradientDrawable) {
-                ((GradientDrawable) backgroundDrawable).setColor(colorResource);
-            }
-        }
-
-        public void clearCell() {
-            piece.clearEatSelection();
-            piece.setPod(null);
-        }
-
-        public void setPiece(Pod pod) {
-            piece.setPod(pod);
-        }
-
-        public void setSelection(boolean state) {
-            // optimize rendering, clearing all cells each time is heavy
-            if (selected == state) {
-                return;
-            }
-            selected = state;
-            if (piece.getPod() == null) {
-                if (selected) {
-                    frame.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
-                    frame.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
-                } else {
-                    frame.getBackground().clearColorFilter();
-                    frame.getBackground().clearColorFilter();
-                }
-            } else {
-                piece.setSelection(selected);
-            }
-        }
-
-        public void setJumpedOver(boolean eatState) {
-            piece.setEatSelection(eatState);
-        }
-
-        private int getCellColorResource(@Nullable Game.Team color) {
-            if (color == null) {
-                return R.color.cell_background;
-            } else {
-                switch (color) {
-                    case RED:
-                        return R.color.light_team_red;
-                    case GREEN:
-                        return R.color.light_team_green;
-                }
-            }
-
-            // TODO: Clarify in code this is unreachable
-            return 0;
-        }
-
-        public boolean isSelected() {
-            return selected;
-        }
-
-        public Vector2D getPosition() {
-            return new Vector2D(x, y);
-        }
-    }
-
     public interface CellClickListener {
-        void onCellClicked(Cell cell);
+        void onCellClicked(CellView cellView);
     }
 }

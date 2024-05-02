@@ -1,6 +1,7 @@
 package com.example.octi;
 
 import com.example.octi.Fragments.BoardFragment;
+import com.example.octi.Fragments.CellView;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.Jump;
 import com.example.octi.Models.Pod;
@@ -33,8 +34,8 @@ public class GameHandler implements BoardFragment.CellClickListener {
     }
 
     @Override
-    public void onCellClicked(BoardFragment.Cell cell) {
-        Pod clickedPod = cell.getPod();
+    public void onCellClicked(CellView cellView) {
+        Pod clickedPod = cellView.getPod();
         Pod previouslySelectedPod = game.getCurrentGameState().getSelectedPod();
         game.getCurrentGameState().deselectPod();
 
@@ -48,16 +49,16 @@ public class GameHandler implements BoardFragment.CellClickListener {
         } else if (
                 clickedPod == null &&
                         previouslySelectedPod != null &&
-                        cell.isSelected()
+                        ((CellView) cellView).isSelected()
         ) {
             // select possible move
             game.getCurrentGameState().selectPod(previouslySelectedPod.getPosition());
-            game.getCurrentGameState().advanceSelectedPod(cell.getPosition());
+            game.getCurrentGameState().advanceSelectedPod(cellView.getPosition());
         } else if (game.getCurrentGameState().isInMove()) {
             // togge eat selection
             List<Jump> jumps = game.getCurrentGameState().getInMoveJumps();
             for (Jump jump: jumps) {
-                if (jump.getOver().equals(cell.getPosition())) {
+                if (jump.getOver().equals(cellView.getPosition())) {
                     jump.setEat(!jump.isEat());
                 }
             }
