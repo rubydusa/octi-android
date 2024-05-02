@@ -136,6 +136,7 @@ public class GameState implements Cloneable {
         ArrayList<Vector2D> result = new ArrayList<>();
 
         ArrayList<Boolean> prongs = pod.getProngs();
+        outer:
         for (int i = 0; i < 8; i++) {
             boolean isProng = prongs.get(i);
             if (!isProng) {
@@ -146,19 +147,21 @@ public class GameState implements Cloneable {
             Vector2D next1 = pod.getPosition().add(direction);
             Vector2D next2 = next1.add(direction);
 
-            // ignore invalid cells
-            if (!GameState.inBound(next1)) {
-                continue;
+            // jumping twice over the same pod is not allowed
+            for (Jump jump: inMoveJumps) {
+                if (jump.getOver().equals(next1)) {
+                    continue outer;
+                }
             }
 
             // jump option
-            if (findPod(next1) != null && findPod(next2) == null) {
+            if (findPod(next1) != null && findPod(next2) == null && GameState.inBound(next2)) {
                 result.add(next2);
             }
 
             // simple move option
             if (!inMove) {
-                if (findPod(next1) == null) {
+                if (findPod(next1) == null && GameState.inBound(next1)) {
                     result.add(next1);
                 }
             }
