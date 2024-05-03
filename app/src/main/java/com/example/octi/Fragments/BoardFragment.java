@@ -1,20 +1,11 @@
 package com.example.octi.Fragments;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.GridLayout;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.octi.Models.ColoredCell;
@@ -39,6 +30,8 @@ public class BoardFragment extends Fragment implements CellView.CellClickListene
 
     private CellClickListener cellClickListener;
 
+    private View selfView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,11 +50,22 @@ public class BoardFragment extends Fragment implements CellView.CellClickListene
             }
         }
 
+        selfView = view;
         return view;
     }
 
     public void setCellClickListener(CellClickListener cellClickListener) {
         this.cellClickListener = cellClickListener;
+    }
+
+    public void setFlipped(boolean isFlipped) {
+        if (isFlipped) {
+            selfView.setRotation(180);
+            selfView.setScaleX(-1);
+        } else {
+            selfView.setRotation(0);
+            selfView.setScaleX(1);
+        }
     }
 
     public void drawBoard(Game game) {

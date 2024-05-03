@@ -25,7 +25,6 @@ public class Game {
 
     private GameState currentGameState;
 
-    // if winner == null then tie
     private Team winner;
 
     public Game() {}

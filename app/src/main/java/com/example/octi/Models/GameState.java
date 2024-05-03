@@ -1,11 +1,10 @@
 package com.example.octi.Models;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -84,7 +83,7 @@ public class GameState implements Cloneable {
         return inMoveJumps;
     }
 
-    public int getCurrentTeamProngCount(Game.Team team) {
+    public int getTeamProngCount(Game.Team team) {
         if (team == Game.Team.RED) {
             return redProngCount;
         } else {
@@ -100,6 +99,65 @@ public class GameState implements Cloneable {
                 return pod;
             }
         }
+
+        return null;
+    }
+
+    ///
+    /// Win Condition
+    ///
+    /// MUST BE CHECKED AFTER TURN TRANSFERRED
+    @Nullable
+    public Game.Team getWinner() {
+        if (inMove) {
+            return null;
+        }
+        // first scenario: a pod got to one of the finishing cells
+        // doesn't take into account a board state where both teams have pods on the finishing cells
+        // since is impossible
+
+        HashMap<Vector2D, Game.Team> coloredCellsMap = new HashMap<>();
+        for (ColoredCell coloredCell: coloredCells) {
+            coloredCellsMap.put(coloredCell.getPosition(), coloredCell.getColor());
+        }
+
+        int redPods = 0;
+        int greenPods = 0;
+
+        for (Pod pod: pods) {
+            if (pod.getTeam() == Game.Team.RED) {
+                redPods++;
+            } else {
+                greenPods++;
+            }
+
+            if (coloredCellsMap.containsKey(pod.getPosition())) {
+                Game.Team cellColor = coloredCellsMap.get(pod.getPosition());
+                if (pod.getTeam() != cellColor) {
+                    return pod.getTeam();
+                }
+            }
+        }
+
+        // second scenario: one team doesn't have pods, the other wins.
+        // doesn't consider hypothetical impossible situation where both have zero pods
+        if (greenPods == 0) {
+            return Game.Team.RED;
+        } else if (redPods == 0) {
+            return Game.Team.GREEN;
+        }
+
+        // third scenario: check if the team currently playing exhausted every move. If so, other team wins
+        if (!hasPossibleNextMoves(turn)) {
+            if (turn == Game.Team.RED) {
+                return Game.Team.GREEN;
+            } else {
+                return Game.Team.RED;
+            }
+        }
+
+        // THERE ARE NOT TIES IN OCTI
+        // OCTI IS A BATTLE, NOT A CONTEST
 
         return null;
     }
@@ -134,6 +192,10 @@ public class GameState implements Cloneable {
             throw new RuntimeException("Pod not selected");
         }
 
+        return nextPossibleMoves(pod);
+    }
+
+    private ArrayList<Vector2D> nextPossibleMoves(Pod pod) {
         ArrayList<Vector2D> result = new ArrayList<>();
 
         ArrayList<Boolean> prongs = pod.getProngs();
@@ -210,7 +272,7 @@ public class GameState implements Cloneable {
 
     // caller needs to catch
     public void placeProng(Vector2D target, int prong) throws RuntimeException {
-        int prongCount = getCurrentTeamProngCount(turn);
+        int prongCount = getTeamProngCount(turn);
         if (prongCount <= 0) {
             throw new RuntimeException("no prongs to place");
         }
@@ -296,6 +358,30 @@ public class GameState implements Cloneable {
         }
 
         throw new RuntimeException("no valid prong inferred");
+    }
+
+    private boolean hasPossibleNextMoves(Game.Team team) {
+        int prongsLeft = getTeamProngCount(team);
+
+        for (Pod pod: pods) {
+            if (pod.getTeam() != team) {
+                continue;
+            }
+
+            if (!nextPossibleMoves(pod).isEmpty()) {
+                return true;
+            }
+
+            if (prongsLeft > 0) {
+                for (boolean prongExists: pod.getProngs()) {
+                    if (!prongExists) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     private void useProng(Game.Team team) {

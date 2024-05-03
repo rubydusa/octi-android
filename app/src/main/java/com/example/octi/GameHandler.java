@@ -28,6 +28,7 @@ public class GameHandler implements BoardFragment.CellClickListener {
         if (game.getVersion() <= lastHighestVersion) {
             return;
         }
+        lastHighestVersion = game.getVersion();
         this.game = game;
     }
 
@@ -48,7 +49,7 @@ public class GameHandler implements BoardFragment.CellClickListener {
         Vector2D target = selectedPod.getPosition();
         try {
             game.getCurrentGameState().placeProng(target, prong);
-            listener.realizeGameChanges(game);
+            startRealizeGameChanges(game);
         } catch (RuntimeException e) {
             // notify error
         }
@@ -93,7 +94,7 @@ public class GameHandler implements BoardFragment.CellClickListener {
             }
         }
 
-        listener.realizeGameChanges(game);
+        startRealizeGameChanges(game);
     }
 
     public void finalizeMove() {
@@ -103,21 +104,23 @@ public class GameHandler implements BoardFragment.CellClickListener {
 
         if (game.getCurrentGameState().isInMove()) {
             game.getCurrentGameState().finalizeState();
-            listener.realizeGameChanges(game);
+
+            startRealizeGameChanges(game);
         }
     }
 
     private void startRealizeGameChanges(Game game) {
         game.incrementVersion();
+        Game.Team winner = game.getCurrentGameState().getWinner();
+        if (winner != null) {
+            game.setWinner(winner);
+            game.setStatus(Game.Status.FINISHED);
+        }
         listener.realizeGameChanges(game);
     }
 
     private boolean checkPermission() {
         return permission == null || permission == game.getCurrentGameState().getTurn();
-    }
-
-    public boolean isPermissioned() {
-        return permission != null;
     }
 
     public interface GameChangesListener {

@@ -1,5 +1,7 @@
 package com.example.octi.Game;
 
+import android.view.View;
+
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Fragments.BoardFragment;
 import com.example.octi.GameHandler;
@@ -14,6 +16,10 @@ public class OnlineGamePresenter implements Repository.LoadGameListener, GameHan
 
     GameHandler gameHandler;
     String id;
+
+    boolean gotFirstGame = false;
+
+    boolean isFlipped = false;
 
     public OnlineGamePresenter(OnlineGameActivity view, BoardFragment board, String id) {
         this.view = view;
@@ -35,15 +41,9 @@ public class OnlineGamePresenter implements Repository.LoadGameListener, GameHan
             return;
         }
 
-        if (!gameHandler.isPermissioned()) {
-            Game.Team permission;
-            if (FirebaseAuth.getInstance().getUid().equals(game.getUser1().getId())) {
-                permission = Game.Team.RED;
-            } else {
-                permission = Game.Team.GREEN;
-            }
-
-            gameHandler.setPermission(permission);
+        if (!gotFirstGame) {
+            gotFirstGame = true;
+            handleFirstGame(game);
         }
 
         gameHandler.setGame(game);
@@ -56,8 +56,28 @@ public class OnlineGamePresenter implements Repository.LoadGameListener, GameHan
     }
 
     public void prongPlaceMove(int prong) {
+        if (isFlipped) {
+            prong = (8 - prong) % 8;
+        }
+
         gameHandler.prongPlaceMove(prong);
     }
+
+    private void handleFirstGame(Game game) {
+        // set up permission and flipping
+        Game.Team permission;
+        if (FirebaseAuth.getInstance().getUid().equals(game.getUser1().getId())) {
+            permission = Game.Team.RED;
+            isFlipped = false;
+        } else {
+            permission = Game.Team.GREEN;
+            isFlipped = true;
+        }
+
+        board.setFlipped(isFlipped);
+        gameHandler.setPermission(permission);
+    }
+
 
     @Override
     public void realizeGameChanges(Game game) {
