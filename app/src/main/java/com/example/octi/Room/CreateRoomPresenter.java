@@ -1,5 +1,6 @@
 package com.example.octi.Room;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.example.octi.Firebase.Repository;
@@ -76,5 +77,14 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
     public void startGame() {
         game.setStatus(Game.Status.ACTIVE);
         Repository.getInstance().updateGame(game);
+    }
+
+    public void shareLink() {
+        String url = "https://octi.example/room?id=" + id;
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Join my game room: " + url);
+        shareIntent.setType("text/plain");
+        view.startShareLink(shareIntent);
     }
 }

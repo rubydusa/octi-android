@@ -3,6 +3,7 @@ package com.example.octi.Room;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,9 +21,19 @@ public class CreateRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_room);
 
+        String roomId;
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+
+        if (data != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+            roomId = data.getQueryParameter("id");
+        } else {
+            roomId = intent.getExtras().getString(getString(R.string.game_id));
+        }
+
         presenter = new CreateRoomPresenter(
                 this,
-                getIntent().getExtras().getString(getString(R.string.game_id))
+                roomId
         );
     }
 
@@ -63,5 +74,13 @@ public class CreateRoomActivity extends AppCompatActivity {
 
     public void onClickNavigateToGame(View view) {
         presenter.startGame();
+    }
+
+    public void onClickShare(View view) {
+        presenter.shareLink();
+    }
+
+    public void startShareLink(Intent shareIntent) {
+        startActivity(Intent.createChooser(shareIntent, "Share link via"));
     }
 }
