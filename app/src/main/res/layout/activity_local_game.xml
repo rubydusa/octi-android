@@ -94,5 +94,47 @@
         </TableRow>
     </TableLayout>
 
+    <TextView
+        android:id="@+id/tv_winner_local_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="48sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/board_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_green_prongs_local_game"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Green prongs:"
+        app:layout_constraintBottom_toTopOf="@+id/board_fragment"
+        app:layout_constraintEnd_toEndOf="@+id/board_fragment"
+        app:layout_constraintStart_toStartOf="@+id/board_fragment" />
+
+    <TextView
+        android:id="@+id/tv_red_prongs_local_game"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Red prongs:"
+        app:layout_constraintBottom_toTopOf="@+id/tv_green_prongs_local_game"
+        app:layout_constraintEnd_toEndOf="@+id/board_fragment"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/board_fragment" />
+
+    <TextView
+        android:id="@+id/tv_turn_local_game"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Turn:"
+        app:layout_constraintBottom_toTopOf="@+id/tv_red_prongs_local_game"
+        app:layout_constraintEnd_toEndOf="@+id/board_fragment"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/board_fragment" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

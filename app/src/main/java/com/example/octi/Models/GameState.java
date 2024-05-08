@@ -11,8 +11,8 @@ import java.util.List;
 public class GameState implements Cloneable {
     private Game.Team turn;
 
-    private int redProngCount;
-    private int greenProngCount;
+    private Integer redProngCount;
+    private Integer greenProngCount;
     private ArrayList<Pod> pods;
     private ArrayList<ColoredCell> coloredCells;
 
@@ -81,6 +81,16 @@ public class GameState implements Cloneable {
     }
     public ArrayList<Jump> getInMoveJumps() {
         return inMoveJumps;
+    }
+
+    // these getters are never used but without them prong counts
+    // don't update in firebase apparently
+    public int getRedProngCount() {
+        return redProngCount;
+    }
+
+    public int getGreenProngCount() {
+        return greenProngCount;
     }
 
     public int getTeamProngCount(Game.Team team) {

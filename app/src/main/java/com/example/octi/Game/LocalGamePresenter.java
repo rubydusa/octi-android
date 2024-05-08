@@ -28,6 +28,12 @@ public class LocalGamePresenter implements GameHandler.GameChangesListener {
 
     @Override
     public void realizeGameChanges(Game game) {
+        Game.Team winner = game.getCurrentGameState().getWinner();
+        if (winner != null) {
+            view.displayWinner(winner);
+            gameHandler.lock();
+        }
+        view.updateGameUI(game);
         board.drawBoard(game);
     }
 }

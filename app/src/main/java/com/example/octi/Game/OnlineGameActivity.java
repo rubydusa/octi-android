@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -69,9 +68,24 @@ public class OnlineGameActivity extends AppCompatActivity {
     }
 
     public void displayGameInfo(Game game) {
-        ((TextView) findViewById(R.id.tv_player1_game)).setText(String.format("Player 1 (red): %s", game.getUser1().getName()));
-        ((TextView) findViewById(R.id.tv_player2_game)).setText(String.format("Player 2 (green): %s", game.getUser2().getName()));
-        ((TextView) findViewById(R.id.tv_turn_game)).setText(game.getCurrentGameState().getTurn() == Game.Team.RED ? "Turn: red" : "Turn: green");
+        TextView tvTurn = findViewById(R.id.tv_turn_online_game);
+        TextView tvPlayer1 = findViewById(R.id.tv_player1_online_game);
+        TextView tvPlayer2 = findViewById(R.id.tv_player2_online_game);
+
+        tvTurn.setText(game.getCurrentGameState().getTurn() == Game.Team.RED ? "Turn: red" : "Turn: green");
+
+        tvPlayer1.setText(
+                String.format("Player 1 (red): %s (%s prongs)",
+                        game.getUser1().getName(),
+                        game.getCurrentGameState().getTeamProngCount(Game.Team.RED)
+                )
+        );
+        tvPlayer2.setText(
+                String.format("Player 2 (green): %s (%s prongs)",
+                        game.getUser2().getName(),
+                        game.getCurrentGameState().getTeamProngCount(Game.Team.GREEN)
+                )
+        );
     }
 
     public void finalizeOnClick(View view) {

@@ -18,8 +18,7 @@ public class EntryPresenter {
     public void checkSignedInOnStart() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Intent intent = new Intent(view, HomeActivity.class);
-            view.startActivity(intent);
+            view.navigateToHome();
         }
     }
 }

@@ -18,6 +18,7 @@ public class GameHandler implements BoardFragment.CellClickListener {
     private Game.Team permission;
     private int lastHighestVersion = -1;
     private GameChangesListener listener;
+    private boolean lock = false;
 
     public GameHandler(Game game, Game.Team permission, GameChangesListener listener) {
         this.game = game;
@@ -37,7 +38,7 @@ public class GameHandler implements BoardFragment.CellClickListener {
     }
 
     public void prongPlaceMove(int prong) {
-        if (game == null || !checkPermission()) {
+        if (game == null || lock || !checkPermission()) {
             return;
         }
 
@@ -57,7 +58,7 @@ public class GameHandler implements BoardFragment.CellClickListener {
 
     @Override
     public void onCellClicked(CellView cellView) {
-        if (game == null || !checkPermission()) {
+        if (game == null || lock|| !checkPermission()) {
             return;
         }
 
@@ -98,7 +99,7 @@ public class GameHandler implements BoardFragment.CellClickListener {
     }
 
     public void finalizeMove() {
-        if (game == null || !checkPermission()) {
+        if (game == null || lock || !checkPermission()) {
             return;
         }
 
@@ -121,6 +122,10 @@ public class GameHandler implements BoardFragment.CellClickListener {
 
     private boolean checkPermission() {
         return permission == null || permission == game.getCurrentGameState().getTurn();
+    }
+
+    public void lock() {
+        lock = true;
     }
 
     public interface GameChangesListener {

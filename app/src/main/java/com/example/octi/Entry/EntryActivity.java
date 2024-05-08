@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.octi.Game.LocalGameActivity;
+import com.example.octi.Home.HomeActivity;
 import com.example.octi.Login.LoginActivity;
 import com.example.octi.R;
 import com.example.octi.Register.RegisterActivity;
@@ -39,5 +40,11 @@ public class EntryActivity extends AppCompatActivity {
     public void onRegisterClick(View v) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
+    }
+
+    public void navigateToHome() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
