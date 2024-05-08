@@ -31,56 +31,65 @@
         app:layout_constraintTop_toBottomOf="@+id/board_fragment">
         <TableRow
             android:layout_weight="1">
-            <Button
+            <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:onClick="topLeftProngOnClick"/>
-            <Button
+                android:background="@drawable/button_arrow_top_left"
+                android:onClick="topLeftProngOnClick" />
+            <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_arrow_top_center"
                 android:onClick="topCenterProngOnClick"/>
-            <Button
+            <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_arrow_top_right"
                 android:onClick="topRightProngOnClick"/>
         </TableRow>
         <TableRow
             android:layout_weight="1">
-            <Button
+            <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_arrow_left"
                 android:onClick="middleLeftProngOnClick"/>
-            <Button
+            <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_ok"
                 android:onClick="finalizeOnClick"/>
-            <Button
+            <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_arrow_right"
                 android:onClick="middleRightProngOnClick"/>
         </TableRow>
         <TableRow
             android:layout_weight="1">
-            <Button
+            <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_arrow_bottom_left"
                 android:onClick="bottomLeftProngOnClick"/>
-            <Button
+            <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:onClick="bottomCenterProngOnClick"/>
-            <Button
+                android:onClick="bottomCenterProngOnClick"
+                android:background="@drawable/button_arrow_bottom_center"/>
+            <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button_arrow_bottom_right"
                 android:onClick="bottomRightProngOnClick"/>
         </TableRow>
     </TableLayout>
