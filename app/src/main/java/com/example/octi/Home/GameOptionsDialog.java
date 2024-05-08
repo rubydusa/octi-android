@@ -2,6 +2,8 @@ package com.example.octi.Home;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,7 @@ public class GameOptionsDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_game_options, null);
+        // dialogView.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         builder.setView(dialogView);
 
         Button localGameButton = dialogView.findViewById(R.id.btn_local_game);
@@ -64,6 +67,13 @@ public class GameOptionsDialog extends DialogFragment {
             dismiss();
         });
 
+
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 }
