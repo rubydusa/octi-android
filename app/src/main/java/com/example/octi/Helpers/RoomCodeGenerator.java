@@ -1,4 +1,4 @@
-package com.example.octi;
+package com.example.octi.Helpers;
 
 import java.security.SecureRandom;
 

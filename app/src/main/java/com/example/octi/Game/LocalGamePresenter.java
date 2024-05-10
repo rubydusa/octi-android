@@ -1,7 +1,7 @@
 package com.example.octi.Game;
 
 import com.example.octi.Fragments.BoardFragment;
-import com.example.octi.GameHandler;
+import com.example.octi.Helpers.GameHandler;
 import com.example.octi.Models.Game;
 
 public class LocalGamePresenter implements GameHandler.GameChangesListener {

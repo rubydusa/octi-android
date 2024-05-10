@@ -4,8 +4,7 @@ import android.util.Log;
 
 import com.example.octi.Models.Game;
 import com.example.octi.Models.User;
-import com.example.octi.RoomCodeGenerator;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.octi.Helpers.RoomCodeGenerator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

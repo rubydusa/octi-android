@@ -1,15 +1,11 @@
 package com.example.octi.Game;
 
-import android.view.View;
-
-import com.example.octi.EloLib;
+import com.example.octi.Helpers.EloLib;
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Fragments.BoardFragment;
-import com.example.octi.GameHandler;
+import com.example.octi.Helpers.GameHandler;
 import com.example.octi.Models.Game;
-import com.example.octi.Models.Pod;
 import com.example.octi.Models.User;
-import com.example.octi.Models.Vector2D;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class OnlineGamePresenter implements Repository.LoadGameListener, GameHandler.GameChangesListener {
