@@ -10,26 +10,26 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.octi.BroadcastReceivers.ReminderBroadcastReceiver;
 import com.example.octi.Entry.EntryActivity;
 import com.example.octi.Game.LocalGameActivity;
 import com.example.octi.Account.AccountActivity;
 import com.example.octi.R;
 import com.example.octi.Room.CreateRoomActivity;
-import com.example.octi.Workers.ReminderWorker;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.concurrent.TimeUnit;
 
 public class HomeActivity extends AppCompatActivity implements GameOptionsDialog.GameOptionsListener {
     HomePresenter presenter;
     private static final int NOTIFICATION_REQUEST_ID = 1;
-    private static final String REMINDER_WORKER_TAG = "reminder_worker";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,15 +107,16 @@ public class HomeActivity extends AppCompatActivity implements GameOptionsDialog
     }
 
     private void createReminderNotification() {
-        PeriodicWorkRequest periodicWorkRequest = new
-                PeriodicWorkRequest.Builder(ReminderWorker.class, 15, TimeUnit.MINUTES)
-                .build();
+        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getApplicationContext(), ReminderBroadcastReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        WorkManager.getInstance(getApplicationContext())
-                .enqueueUniquePeriodicWork(
-                        REMINDER_WORKER_TAG,
-                        ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
-                        periodicWorkRequest
-                );
+        alarmManager.cancel(pendingIntent);
+
+        // Set the alarm to start at a certain time and repeat at specified intervals
+        long startTime = System.currentTimeMillis(); // starting time, e.g., now
+        long repeatInterval = 1000 * 60 * 60; // repeat every hour
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, repeatInterval, pendingIntent);
     }
 }
