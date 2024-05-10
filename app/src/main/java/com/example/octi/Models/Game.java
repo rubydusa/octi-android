@@ -1,7 +1,5 @@
 package com.example.octi.Models;
 
-import java.util.Optional;
-
 // for now, user1 is always red
 public class Game {
     public enum Team {
@@ -91,7 +89,7 @@ public class Game {
         version++;
     }
 
-    public boolean isUser1Red() {
+    public boolean getIsUser1Red() {
         return isUser1Red;
     }
 
@@ -147,5 +145,9 @@ public class Game {
         } else {
             return user1;
         }
+    }
+
+    public String getTeamStringRep(Team team) {
+        return team == Team.RED ? "red" : "green";
     }
 }

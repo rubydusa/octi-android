@@ -74,14 +74,19 @@ public class OnlineGameActivity extends AppCompatActivity {
 
         tvTurn.setText(game.getCurrentGameState().getTurn() == Game.Team.RED ? "Turn: red" : "Turn: green");
 
+        String user1Team = game.getTeamStringRep(game.getUserTeam(game.getUser1().getId()));
+        String user2Team = game.getTeamStringRep(game.getUserTeam(game.getUser2().getId()));
+
         tvPlayer1.setText(
-                String.format("Player 1 (red): %s (%s prongs)",
+                String.format("Player 1 (%s): %s (%s prongs)",
+                        user1Team,
                         game.getUser1().getName(),
                         game.getCurrentGameState().getTeamProngCount(Game.Team.RED)
                 )
         );
         tvPlayer2.setText(
-                String.format("Player 2 (green): %s (%s prongs)",
+                String.format("Player 2 (%s): %s (%s prongs)",
+                        user2Team,
                         game.getUser2().getName(),
                         game.getCurrentGameState().getTeamProngCount(Game.Team.GREEN)
                 )

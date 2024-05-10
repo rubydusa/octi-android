@@ -62,6 +62,25 @@ public class CreateRoomActivity extends AppCompatActivity {
         btn.setEnabled(state);
     }
 
+    public void setSwitchTeamsButton (boolean enabled, boolean isRed) {
+        Button switchTeamsBtn = findViewById(R.id.btn_switch_colors_create_room);
+        switchTeamsBtn.setEnabled(enabled);
+
+        if (enabled) {
+            switchTeamsBtn.getBackground().setAlpha(255);
+        } else {
+            switchTeamsBtn.getBackground().setAlpha(255);
+        }
+
+        if (isRed) {
+            switchTeamsBtn.setBackgroundColor(getResources().getColor(R.color.team_red, getTheme()));
+            switchTeamsBtn.setText("You Are Red");
+        } else {
+            switchTeamsBtn.setBackgroundColor(getResources().getColor(R.color.team_green, getTheme()));
+            switchTeamsBtn.setText("You Are Green");
+        }
+    }
+
     public void setRoomMessage(String message) {
         TextView tvRoomMessage = findViewById(R.id.tv_room_message_create_room);
         tvRoomMessage.setText(message);
@@ -82,5 +101,9 @@ public class CreateRoomActivity extends AppCompatActivity {
 
     public void startShareLink(Intent shareIntent) {
         startActivity(Intent.createChooser(shareIntent, "Share link via"));
+    }
+
+    public void onClickSwitchTeam(View view) {
+        presenter.switchTeams();
     }
 }

@@ -1,7 +1,6 @@
 package com.example.octi.Room;
 
 import android.content.Intent;
-import android.util.Log;
 
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Models.Game;
@@ -38,11 +37,6 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
 
     @Override
     public void updateUser(User user) {
-        if (user == null) {
-            // user might be signed out
-            // TODO
-        }
-
         if (game.getUser1() == null) {
             game.setUser1(user);
             Repository.getInstance().updateGame(game);
@@ -60,8 +54,13 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
     }
 
     public void updateStartButton() {
+        String userId = FirebaseAuth.getInstance().getUid();
+        if (userId == null) {
+            throw new RuntimeException("user must be authenticated");
+        }
+
         boolean isGameReady = game.getUser1() != null && game.getUser2() != null;
-        boolean isPlayer1 = game.getUser1().getId().equals(FirebaseAuth.getInstance().getUid());
+        boolean isPlayer1 = game.getUser1().getId().equals(userId);
 
         if (isGameReady && isPlayer1) {
             view.setRoomMessage("Room ready! You can start the game");
@@ -72,6 +71,12 @@ public class CreateRoomPresenter implements Repository.LoadGameListener, Reposit
         }
 
         view.setButton(isGameReady && isPlayer1);
+        view.setSwitchTeamsButton(isPlayer1, game.getUserTeam(userId) == Game.Team.RED);
+    }
+
+    public void switchTeams() {
+        game.setIsUser1Red(!game.getIsUser1Red());
+        Repository.getInstance().updateGame(game);
     }
 
     public void startGame() {

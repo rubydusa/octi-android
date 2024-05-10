@@ -79,7 +79,7 @@ public class OnlineGamePresenter implements Repository.LoadGameListener, GameHan
     private void handleFirstGame(Game game) {
         // set up permission and flipping
         Game.Team permission;
-        if (FirebaseAuth.getInstance().getUid().equals(game.getUser1().getId())) {
+        if (FirebaseAuth.getInstance().getUid().equals(game.getUserByTeam(Game.Team.RED).getId())) {
             permission = Game.Team.RED;
             isFlipped = false;
         } else {
