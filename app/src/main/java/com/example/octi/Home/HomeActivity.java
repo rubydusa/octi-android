@@ -1,21 +1,14 @@
 package com.example.octi.Home;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -26,6 +19,8 @@ import com.example.octi.Account.AccountActivity;
 import com.example.octi.R;
 import com.example.octi.Room.CreateRoomActivity;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.concurrent.TimeUnit;
 
 public class HomeActivity extends AppCompatActivity implements GameOptionsDialog.GameOptionsListener {
     HomePresenter presenter;
@@ -109,14 +104,13 @@ public class HomeActivity extends AppCompatActivity implements GameOptionsDialog
     private void createReminderNotification() {
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getApplicationContext(), ReminderBroadcastReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager.cancel(pendingIntent);
 
-        // Set the alarm to start at a certain time and repeat at specified intervals
-        long startTime = System.currentTimeMillis(); // starting time, e.g., now
-        long repeatInterval = 1000 * 60 * 60; // repeat every hour
+        // Set the alarm to start in two days
+        long startTime = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(2);
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, repeatInterval, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, startTime, pendingIntent);
     }
 }
