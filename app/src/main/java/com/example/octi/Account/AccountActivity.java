@@ -26,6 +26,13 @@ public class AccountActivity extends AppCompatActivity {
 
     public void showUser(User user) {
         TextView username = findViewById(R.id.tv_username_account_activity);
+        TextView elo = findViewById(R.id.tv_elo_account);
+        TextView wins = findViewById(R.id.tv_wins_account);
+        TextView losses = findViewById(R.id.tv_losses_account);
+
         username.setText(user.getName());
+        elo.setText(String.format("ELO: %s", user.getElo()));
+        wins.setText(String.format("Wins: %s", user.getWins()));
+        losses.setText(String.format("Losses: %s", user.getLosses()));
     }
 }

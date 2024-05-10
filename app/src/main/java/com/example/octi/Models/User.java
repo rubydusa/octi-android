@@ -5,12 +5,21 @@ public class User {
     String name;
     String id;
 
+    int wins;
+
+    int losses;
+
+    int elo;
+
     public User() {}
 
     public User(String email, String name, String id) {
         this.email = email;
         this.name = name;
         this.id = id;
+        wins = 0;
+        losses = 0;
+        elo = 1200;
     }
 
     public String getEmail() {
@@ -25,6 +34,12 @@ public class User {
         return id;
     }
 
+    public int getWins() { return wins; }
+
+    public int getLosses() { return losses; }
+
+    public int getElo() { return elo; }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -35,5 +50,17 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public void setLosses(int losses) {
+        this.losses = losses;
+    }
+
+    public void setElo(int elo) {
+        this.elo = elo;
     }
 }

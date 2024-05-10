@@ -27,9 +27,9 @@ public class Repository {
         return instance;
     }
 
-    public void addUser(User user) {
+    public void updateUser(User user) {
         FirebaseDatabase database = FirebaseDatabase.getInstance(URL);
-        DatabaseReference myRef = database.getReference("Users/" + FirebaseAuth.getInstance().getUid());
+        DatabaseReference myRef = database.getReference("Users/" + user.getId());
 
         myRef.setValue(user);
     }

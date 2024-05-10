@@ -27,6 +27,8 @@ public class Game {
 
     private Team winner;
 
+    private boolean isUser1Red = true;
+
     public Game() {}
 
     public Game(String gameId, User user1, User user2) {
@@ -87,5 +89,63 @@ public class Game {
     }
     public void incrementVersion() {
         version++;
+    }
+
+    public boolean isUser1Red() {
+        return isUser1Red;
+    }
+
+    public void setIsUser1Red(boolean isUser1Red) {
+        this.isUser1Red = isUser1Red;
+    }
+
+    public Team getUserTeam(String userId) {
+        if (!userId.equals(user1.getId()) && !userId.equals((user2.getId()))) {
+            throw new RuntimeException("userId not in game");
+        }
+
+        boolean isUser1 = userId.equals(user1.getId());
+
+        if (isUser1Red) {
+            if (isUser1) {
+                return Team.RED;
+            } else {
+                return Team.GREEN;
+            }
+        } else {
+            if (isUser1) {
+                return Team.GREEN;
+            } else {
+                return Team.RED;
+            }
+        }
+    }
+
+    public User getUserByTeam(Game.Team team) {
+        if (isUser1Red) {
+            if (team == Team.RED) {
+                return user1;
+            } else {
+                return user2;
+            }
+        } else {
+            if (team == Team.RED) {
+                return user2;
+            } else {
+                return user1;
+            }
+        }
+    }
+
+    public User getOtherUser(String userId) {
+        if (!userId.equals(user1.getId()) && !userId.equals((user2.getId()))) {
+            throw new RuntimeException("userId not in game");
+        }
+
+        if (userId.equals(user1.getId())) {
+            return user2;
+        } else {
+            return user1;
+        }
     }
 }

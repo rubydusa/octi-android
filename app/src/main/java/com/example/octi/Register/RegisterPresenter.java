@@ -29,7 +29,7 @@ public class RegisterPresenter {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             User newUser = new User(email, username, FirebaseAuth.getInstance().getUid());
-                            Repository.getInstance().addUser(newUser);
+                            Repository.getInstance().updateUser(newUser);
 
                             Intent intent = new Intent(view, HomeActivity.class);
                             view.startActivity(intent);

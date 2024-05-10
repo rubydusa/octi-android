@@ -2,11 +2,13 @@ package com.example.octi.Game;
 
 import android.view.View;
 
+import com.example.octi.EloLib;
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Fragments.BoardFragment;
 import com.example.octi.GameHandler;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.Pod;
+import com.example.octi.Models.User;
 import com.example.octi.Models.Vector2D;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -37,6 +39,17 @@ public class OnlineGamePresenter implements Repository.LoadGameListener, GameHan
     @Override
     public void updateGame(Game game) {
         if (game.getStatus() == Game.Status.FINISHED) {
+            Game.Team winnerTeam = game.getWinner();
+            User winnerUser = game.getUserByTeam(winnerTeam);
+            User loserUser = game.getOtherUser(winnerUser.getId());
+
+            EloLib.updateUserScores(winnerUser, loserUser);
+            winnerUser.setWins(winnerUser.getWins() + 1);
+            loserUser.setLosses(loserUser.getLosses() + 1);
+
+            Repository.getInstance().updateUser(winnerUser);
+            Repository.getInstance().updateUser(loserUser);
+
             view.navigateToGameOver(game.getGameId());
             return;
         }
