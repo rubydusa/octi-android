@@ -1,4 +1,4 @@
-package com.example.octi.Room;
+package com.example.octi.UI.Room;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.octi.Game.OnlineGameActivity;
+import com.example.octi.UI.Game.OnlineGameActivity;
 import com.example.octi.Models.User;
 import com.example.octi.R;
 

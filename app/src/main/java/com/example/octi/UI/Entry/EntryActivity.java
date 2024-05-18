@@ -1,4 +1,4 @@
-package com.example.octi.Entry;
+package com.example.octi.UI.Entry;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -7,11 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.octi.Game.LocalGameActivity;
-import com.example.octi.Home.HomeActivity;
-import com.example.octi.Login.LoginActivity;
+import com.example.octi.UI.Home.HomeActivity;
+import com.example.octi.UI.Login.LoginActivity;
 import com.example.octi.R;
-import com.example.octi.Register.RegisterActivity;
+import com.example.octi.UI.Register.RegisterActivity;
 
 public class EntryActivity extends AppCompatActivity {
 

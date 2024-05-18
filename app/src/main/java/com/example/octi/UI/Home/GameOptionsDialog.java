@@ -1,4 +1,4 @@
-package com.example.octi.Home;
+package com.example.octi.UI.Home;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

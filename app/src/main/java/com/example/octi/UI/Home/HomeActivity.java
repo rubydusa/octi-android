@@ -1,4 +1,4 @@
-package com.example.octi.Home;
+package com.example.octi.UI.Home;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,11 +13,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.octi.BroadcastReceivers.ReminderBroadcastReceiver;
-import com.example.octi.Entry.EntryActivity;
-import com.example.octi.Game.LocalGameActivity;
-import com.example.octi.Account.AccountActivity;
+import com.example.octi.UI.Entry.EntryActivity;
+import com.example.octi.UI.Game.LocalGameActivity;
+import com.example.octi.UI.Account.AccountActivity;
 import com.example.octi.R;
-import com.example.octi.Room.CreateRoomActivity;
+import com.example.octi.UI.Room.CreateRoomActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.concurrent.TimeUnit;

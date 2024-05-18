@@ -1,4 +1,4 @@
-package com.example.octi.GameOver;
+package com.example.octi.UI.GameOver;
 
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Models.Game;

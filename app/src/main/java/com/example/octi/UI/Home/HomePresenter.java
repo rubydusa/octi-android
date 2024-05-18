@@ -1,12 +1,10 @@
-package com.example.octi.Home;
+package com.example.octi.UI.Home;
 
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.User;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class HomePresenter implements Repository.LoadUserListener {
     HomeActivity view;

@@ -1,11 +1,11 @@
-package com.example.octi.Login;
+package com.example.octi.UI.Login;
 
 import android.content.Intent;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.octi.Home.HomeActivity;
+import com.example.octi.UI.Home.HomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

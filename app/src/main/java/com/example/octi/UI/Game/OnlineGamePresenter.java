@@ -1,4 +1,4 @@
-package com.example.octi.Game;
+package com.example.octi.UI.Game;
 
 import com.example.octi.Helpers.EloLib;
 import com.example.octi.Firebase.Repository;

@@ -1,13 +1,11 @@
-package com.example.octi.Account;
+package com.example.octi.UI.Account;
 
 import android.content.Intent;
 
-import com.example.octi.Entry.EntryActivity;
+import com.example.octi.UI.Entry.EntryActivity;
 import com.example.octi.Firebase.Repository;
 import com.example.octi.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
-
-import kotlin.Pair;
 
 public class AccountPresenter implements Repository.LoadUserListener {
     FirebaseAuth mAuth;

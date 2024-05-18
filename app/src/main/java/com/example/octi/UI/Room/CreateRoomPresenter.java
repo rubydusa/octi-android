@@ -1,4 +1,4 @@
-package com.example.octi.Room;
+package com.example.octi.UI.Room;
 
 import android.content.Intent;
 

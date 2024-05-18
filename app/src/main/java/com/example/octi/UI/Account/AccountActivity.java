@@ -1,4 +1,4 @@
-package com.example.octi.Account;
+package com.example.octi.UI.Account;
 
 import androidx.appcompat.app.AppCompatActivity;
 

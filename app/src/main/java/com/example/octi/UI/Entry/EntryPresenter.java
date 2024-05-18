@@ -1,8 +1,5 @@
-package com.example.octi.Entry;
+package com.example.octi.UI.Entry;
 
-import android.content.Intent;
-
-import com.example.octi.Home.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

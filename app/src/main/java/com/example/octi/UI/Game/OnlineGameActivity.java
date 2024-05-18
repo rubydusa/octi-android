@@ -1,4 +1,4 @@
-package com.example.octi.Game;
+package com.example.octi.UI.Game;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.octi.Fragments.BoardFragment;
-import com.example.octi.GameOver.GameOverActivity;
+import com.example.octi.UI.GameOver.GameOverActivity;
 import com.example.octi.Models.Game;
 import com.example.octi.R;
 

@@ -1,4 +1,4 @@
-package com.example.octi.GameOver;
+package com.example.octi.UI.GameOver;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.octi.Home.HomeActivity;
+import com.example.octi.UI.Home.HomeActivity;
 import com.example.octi.Models.Game;
 import com.example.octi.Models.User;
 import com.example.octi.R;

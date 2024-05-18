@@ -1,4 +1,4 @@
-package com.example.octi.Register;
+package com.example.octi.UI.Register;
 
 import android.content.Intent;
 import android.widget.Toast;
@@ -6,7 +6,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.octi.Firebase.Repository;
-import com.example.octi.Home.HomeActivity;
+import com.example.octi.UI.Home.HomeActivity;
 import com.example.octi.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

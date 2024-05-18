@@ -17,16 +17,13 @@
         android:theme="@style/Theme.Octi"
         tools:targetApi="31">
         <activity
-            android:name=".GameOver.GameOverActivity"
+            android:name=".UI.GameOver.GameOverActivity"
             android:exported="false" />
         <activity
-            android:name=".Account.AccountActivity"
+            android:name=".UI.Account.AccountActivity"
             android:exported="false" />
         <activity
-            android:name=".Game.GameResultsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Room.CreateRoomActivity"
+            android:name=".UI.Room.CreateRoomActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -39,10 +36,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Game.OnlineGameActivity"
+            android:name=".UI.Game.OnlineGameActivity"
             android:exported="false" />
         <activity
-            android:name=".Entry.EntryActivity"
+            android:name=".UI.Entry.EntryActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,16 +48,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Home.HomeActivity"
+            android:name=".UI.Home.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".Game.LocalGameActivity"
+            android:name=".UI.Game.LocalGameActivity"
             android:exported="false" />
         <activity
-            android:name=".Register.RegisterActivity"
+            android:name=".UI.Register.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".Login.LoginActivity"
+            android:name=".UI.Login.LoginActivity"
             android:exported="false" />
         <receiver android:name=".BroadcastReceivers.ReminderBroadcastReceiver"
             android:exported="true">

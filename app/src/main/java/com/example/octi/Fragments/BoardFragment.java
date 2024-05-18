@@ -30,8 +30,6 @@ public class BoardFragment extends Fragment implements CellView.CellClickListene
 
     private CellClickListener cellClickListener;
 
-    private View selfView;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,7 +48,6 @@ public class BoardFragment extends Fragment implements CellView.CellClickListene
             }
         }
 
-        selfView = view;
         return view;
     }
 
@@ -60,11 +57,11 @@ public class BoardFragment extends Fragment implements CellView.CellClickListene
 
     public void setFlipped(boolean isFlipped) {
         if (isFlipped) {
-            selfView.setRotation(180);
-            selfView.setScaleX(-1);
+            getView().setRotation(180);
+            getView().setScaleX(-1);
         } else {
-            selfView.setRotation(0);
-            selfView.setScaleX(1);
+            getView().setRotation(0);
+            getView().setScaleX(1);
         }
     }
 

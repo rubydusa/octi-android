@@ -1,4 +1,4 @@
-package com.example.octi.Game;
+package com.example.octi.UI.Game;
 
 import com.example.octi.Fragments.BoardFragment;
 import com.example.octi.Helpers.GameHandler;

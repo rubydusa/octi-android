@@ -1,4 +1,4 @@
-package com.example.octi.Register;
+package com.example.octi.UI.Register;
 
 import androidx.appcompat.app.AppCompatActivity;
 
