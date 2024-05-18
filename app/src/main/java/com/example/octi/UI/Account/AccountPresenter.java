@@ -8,8 +8,8 @@ import com.example.octi.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class AccountPresenter implements Repository.LoadUserListener {
-    FirebaseAuth mAuth;
-    AccountActivity view;
+    private FirebaseAuth mAuth;
+    private AccountActivity view;
 
     public AccountPresenter(AccountActivity view) {
         mAuth = FirebaseAuth.getInstance();
@@ -20,8 +20,7 @@ public class AccountPresenter implements Repository.LoadUserListener {
 
     public void logOut() {
         mAuth.signOut();
-        Intent intent = new Intent(view, EntryActivity.class);
-        view.startActivity(intent);
+        view.logOut();
     }
 
     @Override

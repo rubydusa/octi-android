@@ -13,7 +13,7 @@ import com.example.octi.Models.User;
 import com.example.octi.R;
 
 public class GameOverActivity extends AppCompatActivity {
-    GameOverPresenter presenter;
+    private GameOverPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

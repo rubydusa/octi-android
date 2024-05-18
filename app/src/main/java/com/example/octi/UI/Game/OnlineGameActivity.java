@@ -67,7 +67,7 @@ public class OnlineGameActivity extends AppCompatActivity {
         finish();
     }
 
-    public void displayGameInfo(Game game) {
+    public void updateGameUI(Game game) {
         TextView tvTurn = findViewById(R.id.tv_turn_online_game);
         TextView tvPlayer1 = findViewById(R.id.tv_player1_online_game);
         TextView tvPlayer2 = findViewById(R.id.tv_player2_online_game);

@@ -14,8 +14,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterPresenter {
-    FirebaseAuth mAuth;
-    RegisterActivity view;
+    private FirebaseAuth mAuth;
+    private RegisterActivity view;
 
     public RegisterPresenter(RegisterActivity view) {
         this.view = view;
@@ -31,8 +31,7 @@ public class RegisterPresenter {
                             User newUser = new User(email, username, FirebaseAuth.getInstance().getUid());
                             Repository.getInstance().updateUser(newUser);
 
-                            Intent intent = new Intent(view, HomeActivity.class);
-                            view.startActivity(intent);
+                            view.navigateToHome();
                         } else {
                             Exception e = task.getException();
                             if (e != null) {

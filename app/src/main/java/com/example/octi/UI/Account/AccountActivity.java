@@ -2,15 +2,17 @@ package com.example.octi.UI.Account;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.octi.Models.User;
 import com.example.octi.R;
+import com.example.octi.UI.Entry.EntryActivity;
 
 public class AccountActivity extends AppCompatActivity {
-    AccountPresenter presenter;
+    private AccountPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,5 +36,10 @@ public class AccountActivity extends AppCompatActivity {
         elo.setText(String.format("ELO: %s", user.getElo()));
         wins.setText(String.format("Wins: %s", user.getWins()));
         losses.setText(String.format("Losses: %s", user.getLosses()));
+    }
+
+    public void logOut() {
+        Intent intent = new Intent(this, EntryActivity.class);
+        startActivity(intent);
     }
 }

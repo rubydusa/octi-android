@@ -11,7 +11,7 @@ import com.example.octi.R;
 import com.example.octi.Models.Game;
 
 public class LocalGameActivity extends AppCompatActivity {
-    LocalGamePresenter presenter;
+    private LocalGamePresenter presenter;
 
 
     @Override

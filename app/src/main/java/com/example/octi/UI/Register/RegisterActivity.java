@@ -2,15 +2,17 @@ package com.example.octi.UI.Register;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
 import com.example.octi.R;
+import com.example.octi.UI.Home.HomeActivity;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    RegisterPresenter presenter;
+    private RegisterPresenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,5 +30,11 @@ public class RegisterActivity extends AppCompatActivity {
                 emailField.getText().toString(),
                 passwordField.getText().toString()
         );
+    }
+
+    public void navigateToHome() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

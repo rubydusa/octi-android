@@ -2,14 +2,16 @@ package com.example.octi.UI.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
 import com.example.octi.R;
+import com.example.octi.UI.Home.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity {
-    LoginPresenter presenter;
+    private LoginPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,5 +28,11 @@ public class LoginActivity extends AppCompatActivity {
                 emailField.getText().toString(),
                 passwordField.getText().toString()
         );
+    }
+
+    public void navigateToHome() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

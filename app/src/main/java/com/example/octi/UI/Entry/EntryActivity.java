@@ -14,7 +14,7 @@ import com.example.octi.UI.Register.RegisterActivity;
 
 public class EntryActivity extends AppCompatActivity {
 
-    EntryPresenter presenter;
+    private EntryPresenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

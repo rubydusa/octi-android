@@ -9,19 +9,17 @@ import com.example.octi.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class OnlineGamePresenter implements Repository.LoadGameListener, GameHandler.GameChangesListener {
-    OnlineGameActivity view;
-    BoardFragment board;
+    private OnlineGameActivity view;
+    private BoardFragment board;
 
-    GameHandler gameHandler;
-    String id;
+    private GameHandler gameHandler;
 
-    boolean gotFirstGame = false;
+    private boolean gotFirstGame = false;
 
-    boolean isFlipped = false;
+    private boolean isFlipped = false;
 
     public OnlineGamePresenter(OnlineGameActivity view, BoardFragment board, String id) {
         this.view = view;
-        this.id = id;
         this.board = board;
 
         // game locked until loaded
@@ -57,7 +55,7 @@ public class OnlineGamePresenter implements Repository.LoadGameListener, GameHan
 
         gameHandler.setGame(game);
         board.drawBoard(game);
-        view.displayGameInfo(game);
+        view.updateGameUI(game);
     }
 
     public void finalizeMove() {

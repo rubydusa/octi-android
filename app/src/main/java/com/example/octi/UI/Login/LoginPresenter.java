@@ -12,8 +12,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginPresenter {
-    FirebaseAuth mAuth;
-    LoginActivity view;
+    private FirebaseAuth mAuth;
+    private LoginActivity view;
 
     public LoginPresenter(LoginActivity view) {
 
@@ -27,8 +27,7 @@ public class LoginPresenter {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Intent intent = new Intent(view, HomeActivity.class);
-                            view.startActivity(intent);
+                            view.navigateToHome();
                         } else {
                             Toast toast = Toast.makeText(view, "Login failed", Toast.LENGTH_SHORT);
                             toast.show();

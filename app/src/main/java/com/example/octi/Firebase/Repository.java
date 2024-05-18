@@ -16,7 +16,7 @@ public class Repository {
 
     private Repository() {}
 
-    final String URL = "https://octi-abcf2-default-rtdb.europe-west1.firebasedatabase.app/";
+    private static final String URL = "https://octi-abcf2-default-rtdb.europe-west1.firebasedatabase.app/";
 
     public static Repository getInstance() {
         if (instance == null) {
@@ -33,7 +33,7 @@ public class Repository {
         myRef.setValue(user);
     }
 
-    LoadUserListener currentLoadUserListener;
+    private LoadUserListener currentLoadUserListener;
     public void setLoadUserListener(LoadUserListener listener) {
         currentLoadUserListener = listener;
     }
@@ -82,7 +82,7 @@ public class Repository {
         myRef.setValue(game);
     }
 
-    LoadGameListener currentLoadGameListener;
+    private LoadGameListener currentLoadGameListener;
     public void setLoadGameListener(LoadGameListener listener) {
         currentLoadGameListener = listener;
     }

@@ -5,9 +5,9 @@ import com.example.octi.Helpers.GameHandler;
 import com.example.octi.Models.Game;
 
 public class LocalGamePresenter implements GameHandler.GameChangesListener {
-    LocalGameActivity view;
-    BoardFragment board;
-    GameHandler gameHandler;
+    private LocalGameActivity view;
+    private BoardFragment board;
+    private GameHandler gameHandler;
 
     public LocalGamePresenter(LocalGameActivity view, BoardFragment board) {
         this.view = view;
@@ -16,6 +16,7 @@ public class LocalGamePresenter implements GameHandler.GameChangesListener {
         gameHandler = new GameHandler(game, null,this);
         board.setCellClickListener(gameHandler);
         board.drawBoard(game);
+        view.updateGameUI(game);
     }
 
     public void finalizeMove() {

@@ -4,8 +4,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class EntryPresenter {
-    FirebaseAuth mAuth;
-    EntryActivity view;
+    private FirebaseAuth mAuth;
+    private EntryActivity view;
 
     public EntryPresenter(EntryActivity view) {
         mAuth = FirebaseAuth.getInstance();
