@@ -22,6 +22,7 @@ public class GameHandler implements BoardFragment.CellClickListener {
 
     public GameHandler(Game game, Game.Team permission, GameChangesListener listener) {
         this.game = game;
+        this.permission = permission;
         this.listener = listener;
     }
 
