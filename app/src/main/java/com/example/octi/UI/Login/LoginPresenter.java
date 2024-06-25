@@ -22,6 +22,16 @@ public class LoginPresenter {
     }
 
     public void login(String email, String password) {
+        if (email.length() == 0) {
+            view.loginFailed("Email field can not be empty");
+            return;
+        }
+
+        if (password.length() == 0) {
+            view.loginFailed("Password field can not be empty");
+            return;
+        }
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(view, new OnCompleteListener<AuthResult>() {
                     @Override

@@ -23,6 +23,21 @@ public class RegisterPresenter {
     }
 
     public void register(String username, String email, String password) {
+        if (username.length() == 0) {
+            view.registerFailed("Username can not be empty");
+            return;
+        }
+
+        if (email.length() == 0) {
+            view.registerFailed("Email field can not be empty");
+            return;
+        }
+
+        if (password.length() == 0) {
+            view.registerFailed("Password field can not be empty");
+            return;
+        }
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(view, new OnCompleteListener<AuthResult>() {
                     @Override
