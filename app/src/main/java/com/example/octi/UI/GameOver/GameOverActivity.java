@@ -29,12 +29,7 @@ public class GameOverActivity extends AppCompatActivity {
         player1.setText(String.format("PLAYER 1: %s", game.getUser1().getName()));
         player2.setText(String.format("PLAYER 2: %s", game.getUser2().getName()));
 
-        User winner;
-        if (game.getWinner() == Game.Team.RED) {
-            winner = game.getUser1();
-        } else {
-            winner = game.getUser2();
-        }
+        User winner = game.getUserByTeam(game.getWinner());
 
         TextView winnerTv = findViewById(R.id.tv_winner_game_over);
         winnerTv.setText(String.format("WINNER: %s", winner.getName()));
